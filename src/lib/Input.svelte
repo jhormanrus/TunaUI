@@ -3,7 +3,7 @@
   export let type: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' = 'text'
   export let size: 'sm' | 'lg' | null = null
   export let label: string
-  export let placeholder: string = ''
+  export let placeholder = ''
 </script>
 
 <div class="input-field" class:sm={size === 'sm'} class:lg={size === 'lg'}>

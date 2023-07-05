@@ -1,6 +1,6 @@
 <script lang="ts">
   import '../app.css'
-  import { Input } from '../lib/index'
+  import { Input } from '../lib/index.js'
 </script>
 
 <div class="grid place-items-center min-h-screen">
