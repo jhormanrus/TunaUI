@@ -7,7 +7,16 @@ import type { UserConfig } from 'vite'
 const config: UserConfig = {
 	plugins: [sveltekit()],
 	histoire: {
-		plugins: [HstSvelte()]
+		plugins: [HstSvelte()],
+		setupFile: '/src/histoire-setup.ts',
+		theme: {
+			title: 'Tuna UI'
+		},
+		vite: {
+			server: {
+				host: true
+			}
+		}
 	}
 }
 
