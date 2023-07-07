@@ -1,1 +1,7 @@
-<h1 class="underline">hola</h1>
+<button>
+  <slot />
+</button>
+
+<style lang="postcss">
+
+</style>

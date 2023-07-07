@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Input } from '$lib/index.js'
+  import { Button } from '$lib/index.js'
   import type { Hst } from '@histoire/plugin-svelte'
 
   export let Hst: Hst
@@ -7,6 +7,6 @@
 
 <Hst.Story title="BaseButton">
   <div class="p-2">
-    <Input id="x" label="text"></Input>
+    <Button>Do some hard work</Button>
   </div>
 </Hst.Story>

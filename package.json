@@ -8,47 +8,51 @@
     "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "eslint .",
     "story:dev": "histoire dev",
     "story:build": "histoire build",
     "story:preview": "histoire preview"
   },
   "exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
-		}
-	},
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
   "files": [
-		"dist",
-		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*"
-	],
-	"peerDependencies": {
-		"svelte": "^4.0.0"
-	},
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "peerDependencies": {
+    "svelte": "^4.0.0"
+  },
   "devDependencies": {
     "@histoire/plugin-svelte": "^0.16.1",
     "@sveltejs/adapter-auto": "^2.1.0",
-    "@sveltejs/kit": "^1.21.0",
+    "@sveltejs/kit": "^1.22.1",
     "@sveltejs/package": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.44.0",
+    "eslint-config-standard-with-typescript": "^36.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-svelte": "^2.32.2",
     "histoire": "^0.16.2",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.25",
     "publint": "^0.1.16",
-    "svelte": "^4.0.4",
-    "svelte-check": "^3.4.4",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.5",
     "tailwindcss": "^3.3.2",
     "tslib": "^2.6.0",
     "typescript": "^5.1.6",
-    "vite": "^4.3.9"
+    "vite": "^4.4.2"
   },
   "svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "type": "module"
 }

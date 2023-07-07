@@ -20,7 +20,6 @@
   .input-field {
     @apply relative;
   }
-  
   .input-field > input {
     @apply w-full;
     @apply bg-gray-200;
