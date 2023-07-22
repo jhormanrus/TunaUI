@@ -11,11 +11,6 @@ const config: UserConfig = {
 		setupFile: '/src/histoire-setup.ts',
 		theme: {
 			title: 'Tuna UI'
-		},
-		vite: {
-			server: {
-				host: true
-			}
 		}
 	}
 }
