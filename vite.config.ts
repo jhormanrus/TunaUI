@@ -11,6 +11,14 @@ const config: UserConfig = {
 		setupFile: '/src/histoire-setup.ts',
 		theme: {
 			title: 'Tuna UI'
+		},
+		tree: {
+			groups: [
+				{
+					id: 'top',
+					title: '',
+				},
+			],
 		}
 	}
 }
