@@ -2,10 +2,11 @@
 
 import { HstSvelte } from '@histoire/plugin-svelte'
 import { sveltekit } from '@sveltejs/kit/vite'
-import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
 
-const config: UserConfig = {
+export default defineConfig({
 	plugins: [sveltekit()],
+	
 	histoire: {
 		plugins: [HstSvelte()],
 		setupFile: '/src/histoire-setup.ts',
@@ -21,6 +22,4 @@ const config: UserConfig = {
 			],
 		}
 	}
-}
-
-export default config
+})
