@@ -6,7 +6,9 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
 	plugins: [sveltekit()],
-	
+	server: {
+		host: true
+	},
 	histoire: {
 		plugins: [HstSvelte()],
 		setupFile: '/src/histoire-setup.ts',
