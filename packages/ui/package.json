@@ -33,6 +33,6 @@
     "vite": "^4.4.9"
   },
   "dependencies": {
-    "@master/css.svelte": "beta"
+    "@master/css": "beta"
   }
 }
