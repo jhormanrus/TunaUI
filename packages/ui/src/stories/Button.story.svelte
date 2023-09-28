@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button } from '$lib/index.js'
+  import { Button } from '../lib/index.js'
   import type { Hst } from '@histoire/plugin-svelte'
 
   export let Hst: Hst

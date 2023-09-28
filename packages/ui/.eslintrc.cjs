@@ -24,7 +24,7 @@ module.exports = {
 			parser: 'svelte-eslint-parser',
 			parserOptions: {
 				parser: '@typescript-eslint/parser',
-				project: './tsconfig.json'
+				project: './packages/ui/tsconfig.json'
 			}
 		}
 	]

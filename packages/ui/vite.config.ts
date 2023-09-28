@@ -1,11 +1,11 @@
 /// <reference types="histoire" />
 
-import { HstSvelte } from '@histoire/plugin-svelte'
-import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { HstSvelte } from '@histoire/plugin-svelte'
 
 export default defineConfig({
-	plugins: [sveltekit()],
+  plugins: [svelte()],
 	server: {
 		host: true
 	},
