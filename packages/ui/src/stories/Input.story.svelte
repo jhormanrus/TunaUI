@@ -19,7 +19,7 @@
   </Hst.Variant>
 
   <Hst.Variant title="destructive">
-    <Input label="Input" size="lg" />
+    <Input label="Input" size="lg" placeholder="Hola mundo" />
   </Hst.Variant>
 
   <Hst.Variant title="outline">

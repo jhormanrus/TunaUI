@@ -1,4 +1,4 @@
 {
-  "name": "tuna-ui",
+  "name": "tuna",
   "workspaces": ["packages/*"]
 }
