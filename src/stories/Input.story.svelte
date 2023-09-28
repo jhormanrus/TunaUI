@@ -11,11 +11,11 @@
 >
 
   <Hst.Variant title="primary">
-    <Input label="Input" />
+    <Input label="Input" size="sm" />
   </Hst.Variant>
 
   <Hst.Variant title="secondary">
-    <Input label="Input" size="sm" />
+    <Input label="Input" size="md" />
   </Hst.Variant>
 
   <Hst.Variant title="destructive">
@@ -23,12 +23,15 @@
   </Hst.Variant>
 
   <Hst.Variant title="outline">
+    <Input label="Input" size="sm" value="AAAAAA" />
   </Hst.Variant>
 
   <Hst.Variant title="ghost">
+    <Input label="Input" size="md" value="AAAAAA" />
   </Hst.Variant>
 
   <Hst.Variant title="link">
+    <Input label="Input" size="lg" value="AAAAAA" />
   </Hst.Variant>
 
   <Hst.Variant title="icon">
