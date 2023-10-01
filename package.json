@@ -1,4 +1,7 @@
 {
   "name": "tuna",
-  "workspaces": ["packages/*"]
+  "workspaces": ["packages/*"],
+  "devDependencies": {
+    "bun-types": "latest"
+  }
 }
