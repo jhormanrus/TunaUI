@@ -1,39 +1,36 @@
-import path from "path"
-import { Config } from "@/src/utils/get-config"
+import path from 'path'
+import { type Config } from '@/src/utils/get-config'
 import {
   registryBaseColorSchema,
   registryIndexSchema,
-  registryItemWithContentSchema,
-  registryWithContentSchema,
-} from "@/src/utils/registry/schema"
-import { Input, parse } from "valibot"
+  type registryItemWithContentSchema,
+  registryWithContentSchema
+} from '@/src/utils/registry/schema'
+import { type Input, parse } from 'valibot'
 
-const baseUrl = process.env.COMPONENTS_REGISTRY_URL ?? ""
+const baseUrl = process.env.COMPONENTS_REGISTRY_URL ?? ''
 
-export async function getRegistryIndex() {
+export async function getRegistryIndex (): Promise<Input<typeof registryIndexSchema>> {
   try {
-    const [result] = await fetchRegistry(["index.json"])
+    const [result] = await fetchRegistry(['index.json'])
 
     return parse(registryIndexSchema, result)
   } catch (error) {
-    throw new Error(`Failed to fetch components from registry.`)
+    throw new Error('Failed to fetch components from registry.')
   }
 }
 
-export async function getRegistryBaseColor(baseColor: string) {
+export async function getRegistryBaseColor (baseColor: string): Promise<Input<typeof registryBaseColorSchema>> {
   try {
     const [result] = await fetchRegistry([`colors/${baseColor}.json`])
 
     return parse(registryBaseColorSchema, result)
   } catch (error) {
-    throw new Error(`Failed to fetch base color from registry.`)
+    throw new Error('Failed to fetch base color from registry.')
   }
 }
 
-export async function resolveTree(
-  index: Input<typeof registryIndexSchema>,
-  names: string[]
-) {
+export async function resolveTree (index: Input<typeof registryIndexSchema>, names: string[]): Promise<Input<typeof registryIndexSchema>> {
   const tree: Input<typeof registryIndexSchema> = []
 
   for (const name of names) {
@@ -57,31 +54,28 @@ export async function resolveTree(
   )
 }
 
-export async function fetchTree(
-  style: string,
-  tree: Input<typeof registryIndexSchema>
-) {
+export async function fetchTree (style: string, tree: Input<typeof registryIndexSchema>): Promise<Input<typeof registryWithContentSchema>> {
   try {
     const paths = tree.map((item) => `styles/${style}/${item.name}.json`)
     const result = await fetchRegistry(paths)
 
     return parse(registryWithContentSchema, result)
   } catch (error) {
-    throw new Error(`Failed to fetch tree from registry.`)
+    throw new Error('Failed to fetch tree from registry.')
   }
 }
 
-export async function getItemTargetPath(
+export async function getItemTargetPath (
   config: Config,
-  item: Pick<Input<typeof registryItemWithContentSchema>, "type">,
+  item: Pick<Input<typeof registryItemWithContentSchema>, 'type'>,
   override?: string
-) {
+): Promise<string | null> {
   // Allow overrides for all items but ui.
-  if (override && item.type !== "components:ui") {
+  if (override && item.type !== 'components:ui') {
     return override
   }
 
-  const [parent, type] = item.type.split(":")
+  const [parent, type] = item.type.split(':')
   if (!(parent in config.resolvedPaths)) {
     return null
   }
@@ -92,7 +86,7 @@ export async function getItemTargetPath(
   )
 }
 
-async function fetchRegistry(paths: string[]) {
+async function fetchRegistry (paths: string[]): Promise<unknown[]> {
   try {
     const results = await Promise.all(
       paths.map(async (path) => {
