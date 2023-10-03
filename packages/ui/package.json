@@ -17,13 +17,13 @@
     "@histoire/plugin-svelte": "^0.17.0",
     "@sveltejs/vite-plugin-svelte": "^2.4.6",
     "@tsconfig/svelte": "^5.0.2",
-    "@typescript-eslint/parser": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.4",
     "eslint-plugin-svelte": "^2.33.2",
     "histoire": "^0.17.2",
     "svelte": "^4.2.1",
     "svelte-check": "^3.5.2",
     "tslib": "^2.6.2",
-    "vite": "^4.4.9"
+    "vite": "^4.4.10"
   },
   "dependencies": {
     "@master/css": "beta"
