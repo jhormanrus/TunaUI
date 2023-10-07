@@ -36,9 +36,7 @@ export async function resolveTree (index: Input<typeof RegistryIndexSchema>, nam
   for (const name of names) {
     const entry = index.find((entry) => entry.name === name)
 
-    if (!entry) {
-      continue
-    }
+    if (!entry) continue
 
     tree.push(entry)
 
@@ -65,11 +63,7 @@ export async function fetchTree (style: string, tree: Input<typeof RegistryIndex
   }
 }
 
-export async function getItemTargetPath (
-  config: Config,
-  item: Pick<Input<typeof RegistryItemWithContentSchema>, 'type'>,
-  override?: string
-): Promise<string | null> {
+export async function getItemTargetPath (config: Config, item: Pick<Input<typeof RegistryItemWithContentSchema>, 'type'>, override?: string): Promise<string | null> {
   // Allow overrides for all items but ui.
   if (override && item.type !== 'components:ui') {
     return override

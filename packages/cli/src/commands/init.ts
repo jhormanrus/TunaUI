@@ -1,18 +1,9 @@
 import { existsSync, promises as fs } from 'fs'
 import path from 'path'
-import {
-  DEFAULT_COMPONENTS,
-  DEFAULT_GLOBAL_CSS,
-  DEFAULT_MASTERCSS_CONFIG,
-  DEFAULT_UTILS,
-  getConfig,
-  RawConfigSchema,
-  resolveConfigPaths,
-  type Config
-} from '@/src/utils/get-config'
+import { DEFAULT_COMPONENTS, DEFAULT_GLOBAL_CSS, DEFAULT_MASTERCSS_CONFIG, DEFAULT_UTILS, getConfig, RawConfigSchema, resolveConfigPaths, type Config } from '@/src/utils/get-config'
 import { handleError } from '@/src/utils/handle-error'
 import { logger } from '@/src/utils/logger'
-import { getRegistryBaseColor } from '@/src/utils/registry'
+// import { getRegistryBaseColor } from '@/src/utils/registry'
 import * as templates from '@/src/utils/templates'
 import chalk from 'chalk'
 import { Command } from 'commander'
@@ -189,16 +180,16 @@ export async function runInit (cwd: string, config: Config): Promise<void> {
   )
 
   // Write css file.
-  const baseColor = await getRegistryBaseColor('slate')
-  if (baseColor) {
-    await fs.writeFile(
-      config.resolvedPaths.globalCss,
-      config.mastercss.cssVariables
-        ? baseColor.cssVarsTemplate
-        : baseColor.inlineColorsTemplate,
-      'utf8'
-    )
-  }
+  // const baseColor = await getRegistryBaseColor('slate')
+  // if (baseColor) {
+  //   await fs.writeFile(
+  //     config.resolvedPaths.globalCss,
+  //     config.mastercss.cssVariables
+  //       ? baseColor.cssVarsTemplate
+  //       : baseColor.inlineColorsTemplate,
+  //     'utf8'
+  //   )
+  // }
 
   // Write cn file.
   await fs.writeFile(

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// import { add } from '@/src/commands/add'
+import { add } from '@/src/commands/add'
 // import { diff } from '@/src/commands/diff'
 import { init } from '@/src/commands/init'
 import { Command } from 'commander'
@@ -20,7 +20,7 @@ async function main (): Promise<void> {
 
   program
     .addCommand(init)
-    // .addCommand(add)
+    .addCommand(add)
     // .addCommand(diff)
 
   program.parse()

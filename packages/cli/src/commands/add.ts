@@ -4,7 +4,6 @@ import { getConfig } from '@/src/utils/get-config'
 import { handleError } from '@/src/utils/handle-error'
 import { logger } from '@/src/utils/logger'
 import { fetchTree, getItemTargetPath, getRegistryBaseColor, getRegistryIndex, resolveTree } from '@/src/utils/registry'
-import { transform } from '@/src/utils/transformers'
 import chalk from 'chalk'
 import { Command } from 'commander'
 import ora from 'ora'
@@ -85,6 +84,7 @@ export const add = new Command()
       const tree = await resolveTree(registryIndex, selectedComponents)
       const payload = await fetchTree('default', tree)
       const baseColor = await getRegistryBaseColor('slate')
+      console.log(baseColor)
 
       if (!payload.length) {
         logger.warn('Selected components not found. Exiting.')
@@ -151,22 +151,8 @@ export const add = new Command()
         }
 
         for (const file of item.files) {
-          let filePath = path.resolve(targetDir, file.name)
-
-          // Run transformers.
-          const content = await transform({
-            filename: file.name,
-            raw: file.content,
-            config,
-            baseColor
-          })
-
-          if (!config.typescript) {
-            filePath = filePath.replace(/\.tsx$/, '.jsx')
-            filePath = filePath.replace(/\.ts$/, '.js')
-          }
-
-          await fs.writeFile(filePath, content)
+          const filePath = path.resolve(targetDir, file.name)
+          await fs.writeFile(filePath, file.content)
         }
 
         // Install dependencies.
