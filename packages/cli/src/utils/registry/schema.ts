@@ -1,7 +1,7 @@
 import { array, enumType, merge, object, optional, record, string } from 'valibot'
 
 // TODO: Extract this to a shared package.
-export const registryItemSchema = object({
+export const RegistryItemSchema = object({
   name: string(),
   dependencies: optional(array(string())),
   registryDependencies: optional(array(string())),
@@ -9,9 +9,9 @@ export const registryItemSchema = object({
   type: enumType(['components:ui', 'components:component', 'components:example'])
 })
 
-export const registryIndexSchema = array(registryItemSchema)
+export const RegistryIndexSchema = array(RegistryItemSchema)
 
-export const registryItemWithContentSchema = merge([registryItemSchema, object({
+export const RegistryItemWithContentSchema = merge([RegistryItemSchema, object({
   files: array(
     object({
       name: string(),
@@ -20,9 +20,9 @@ export const registryItemWithContentSchema = merge([registryItemSchema, object({
   )
 })])
 
-export const registryWithContentSchema = array(registryItemWithContentSchema)
+export const RegistryWithContentSchema = array(RegistryItemWithContentSchema)
 
-export const registryBaseColorSchema = object({
+export const RegistryBaseColorSchema = object({
   inlineColors: object({
     light: record(string(), string()),
     dark: record(string(), string())
