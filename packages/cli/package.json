@@ -32,17 +32,17 @@
   },
   "dependencies": {
     "chalk": "5.3.0",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
     "lilconfig": "^2.1.0",
     "lodash.template": "^4.5.0",
     "ora": "^7.0.1",
     "prompts": "^2.4.2",
     "tsconfig-paths": "^4.2.0",
-    "valibot": "^0.18.0"
+    "valibot": "^0.19.0"
   },
   "devDependencies": {
-    "@types/lodash.template": "^4.5.1",
-    "@types/prompts": "^2.4.5",
+    "@types/lodash.template": "^4.5.2",
+    "@types/prompts": "^2.4.7",
     "rimraf": "^5.0.5"
   }
 }
