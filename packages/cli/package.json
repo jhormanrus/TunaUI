@@ -38,11 +38,11 @@
     "ora": "^7.0.1",
     "prompts": "^2.4.2",
     "tsconfig-paths": "^4.2.0",
-    "valibot": "^0.20.0"
+    "valibot": "^0.20.1"
   },
   "devDependencies": {
-    "@types/lodash.template": "^4.5.2",
-    "@types/prompts": "^2.4.7",
+    "@types/lodash.template": "^4.5.3",
+    "@types/prompts": "^2.4.8",
     "rimraf": "^5.0.5"
   }
 }
