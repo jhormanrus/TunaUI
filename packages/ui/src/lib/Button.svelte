@@ -1,5 +1,5 @@
 <button
-  class="b:2 b:gray-80 r:12 bg:white px:16 py:8 font:medium fg:gray-20 inline-flex jc:center ai:center gap:8 f:16 h:40"
+  class="inline-flex ai:center b:2 b:gray-80 bg:white f:16 fg:gray-20 font:medium gap:8 h:40 jc:center px:16 py:8 r:12"
   type="button"
 >
   <slot />

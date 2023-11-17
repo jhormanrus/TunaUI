@@ -1,6 +1,7 @@
 module.exports = {
 	root: true,
 	extends: [
+		'@master/css',
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:svelte/recommended'
@@ -24,7 +25,7 @@ module.exports = {
 			parser: 'svelte-eslint-parser',
 			parserOptions: {
 				parser: '@typescript-eslint/parser',
-				project: './packages/ui/tsconfig.json'
+				project: 'tsconfig.json'
 			}
 		}
 	]
