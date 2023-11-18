@@ -1,9 +1,10 @@
 import type { Config } from '@master/css'
 
-export default {
-  classes: {},
-  colors: {
-    input: {
+const config: Config = {
+  styles: {},
+  rules: {},
+  variables: {
+    control: {
       text: '#000',
       bg: '#f2f2f0',
       outline: '#78716c',
@@ -12,15 +13,13 @@ export default {
       hover: {
         bg: '#efeded',
       },
-    }
+    },
   },
-  themes: {},
-  rules: {},
-  values: {},
   semantics: {},
-  viewports: {},
   mediaQueries: {},
   animations: {},
   selectors: {},
   functions: {}
-} as Config
+}
+
+export default config
