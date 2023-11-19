@@ -3,6 +3,11 @@
     "types": [
       "bun-types"
     ],
-    "strict": true
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "isolatedModules": false
   }
 }
