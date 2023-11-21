@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Button } from '../lib/index.js'
   import type { Hst } from '@histoire/plugin-svelte'
+  import Button from '../../lib/Button/Button.svelte'
 
   export let Hst: Hst
 </script>

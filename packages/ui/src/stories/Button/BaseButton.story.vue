@@ -1,15 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
-import Button from '../lib/BaseButton.vue'
+import Button from '../../lib/Button/BaseButton.vue'
 
-const text = ref('Click me');
+const text = ref('Click me')
 </script>
 
 <template>
   <Story>
     <div>
-      {{ text }}
-      <Button />
+      <Button>{{ text }}</Button>
     </div>
 
     <template #controls>

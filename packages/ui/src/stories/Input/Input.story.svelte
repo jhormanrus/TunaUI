@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Input } from '../lib/index.js'
   import type { Hst } from '@histoire/plugin-svelte'
+  import Input from '../../lib/Input/Input.svelte'
 
   export let Hst: Hst
 </script>

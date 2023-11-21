@@ -1,5 +1,9 @@
 @import '@master/normal.css';
 
-.histoire-generic-render-story {
-  overflow: visible !important;
+.histoire-generic-render-story.__histoire-render-story {
+  padding: 1rem;
+}
+
+[data-test-id="sandbox-render"] {
+  padding: 0;
 }
