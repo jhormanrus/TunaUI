@@ -22,6 +22,14 @@ export default defineConfig({
         {
           id: 'top',
           title: ''
+        },
+        {
+          title: 'Svelte',
+          include: file => /\.story\.svelte$/.test(file.path)
+        },
+        {
+          title: 'Vue',
+          include: file => /\.story\.vue$/.test(file.path)
         }
       ]
     }
