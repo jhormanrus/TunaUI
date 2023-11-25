@@ -5,28 +5,25 @@ const props = withDefaults(
   defineProps<{
     modelValue?: T
     id?: string
-    type: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
-    size: 'sm' | 'lg' | 'md'
-    label: string
+    type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
+    size?: 'sm' | 'lg' | 'md'
+    label?: string
     placeholder?: string
     required?: boolean
   }>(),
   {
     type: 'text',
-    size: 'md',
-    label: ''
-  },
+    size: 'md'
+  }
 )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value?: T): void
-}>()
+const emit = defineEmits<(e: 'update:modelValue', value?: T) => void>()
 
 const value = computed({
-  get() {
+  get () {
     return props.modelValue
   },
-  set(value) {
+  set (value) {
     emit('update:modelValue', value)
   }
 })
@@ -35,11 +32,11 @@ const value = computed({
 <template>
   <div class="rel">
     <span
-      class="abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform:top|left"
+      class="abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform-origin:top|left"
       :class="[
-        size === 'sm' && 'f:16 translate(12,14) transform:translate(12,8)scale(.75):has(+:focus) transform:translate(12,8)scale(.75):has(+:valid)',
-        size === 'md' && 'f:16 translate(14,18) transform:translate(14,10)scale(.75):has(+:focus) transform:translate(14,10)scale(.75):has(+:valid)',
-        size === 'lg' && 'f:18 translate(16,22) transform:translate(16,14)scale(.75):has(+:focus) transform:translate(16,14)scale(.75):has(+:valid)'
+        size === 'sm' && 'f:16 translate(12,14) translate(12,8)scale(.75):has(+:valid) translate(12,8)scale(.75):has(+:focus)',
+        size === 'md' && 'f:16 translate(14,18) transform:translate(14,10)scale(.75):has(+:valid) transform:translate(14,10)scale(.75):has(+:focus)',
+        size === 'lg' && 'f:18 translate(16,22) transform:translate(16,14)scale(.75):has(+:valid) transform:translate(16,14)scale(.75):has(+:focus)'
       ]"
     >
       {{ label }}
@@ -49,12 +46,12 @@ const value = computed({
       :id="id"
       :type="type"
       :placeholder="placeholder"
-      :required="required"
-      class="bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus fg:transparent::placeholder fg:gray-60:valid::placeholder fg:control-placeholder:focus::placeholder outline:control-outline w:full"
+      required
+      class="bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus fg:transparent::placeholder fg:gray-60:valid::placeholder fg:control-placeholder:focus::placeholder outline:control-outline|solid|2:focus-visible w:full"
       :class="[
-        size === 'sm' && 'f:16 px:12 pt:21 pb:5 r:10',
-        size === 'md' && 'f:16 px:14 pt:26 pb:8 r:12',
-        size === 'lg' && 'f:18 px:16 pt:32 pb:12 r:14'
+        size === 'sm' && 'f:16 pb:5 pt:21 px:12 r:10',
+        size === 'md' && 'f:16 pb:8 pt:26 px:14 r:12',
+        size === 'lg' && 'f:18 pb:12 pt:32 px:16 r:14'
       ]"
     />
   </div>

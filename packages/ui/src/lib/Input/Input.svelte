@@ -10,7 +10,7 @@
 <div class="rel">
   <span
     class="
-      abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform:top|left
+      abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform-origin:top|left
       {size === 'sm' && 'f:16 translate(12,14) transform:translate(12,8)scale(.75):has(+:focus) transform:translate(12,8)scale(.75):has(+:valid)'}
       {size === 'md' && 'f:16 translate(14,18) transform:translate(14,10)scale(.75):has(+:focus) transform:translate(14,10)scale(.75):has(+:valid)'}
       {size === 'lg' && 'f:18 translate(16,22) transform:translate(16,14)scale(.75):has(+:focus) transform:translate(16,14)scale(.75):has(+:valid)'}
