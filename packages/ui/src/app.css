@@ -1,6 +1,6 @@
 @import '@master/normal.css';
 
-.histoire-generic-render-story.__histoire-render-story {
+.histoire-generic-render-story.__histoire-render-story:not(.__histoire-render-custom-controls) {
   padding: 1rem;
 }
 

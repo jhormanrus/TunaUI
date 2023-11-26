@@ -32,11 +32,11 @@ const value = computed({
 <template>
   <div class="rel">
     <span
-      class="abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform-origin:top|left"
+      class="abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform-origin:top|left transition:transform|100ms|ease-in"
       :class="[
         size === 'sm' && 'f:16 translate(12,14) translate(12,8)scale(.75):has(+:valid) translate(12,8)scale(.75):has(+:focus)',
-        size === 'md' && 'f:16 translate(14,18) transform:translate(14,10)scale(.75):has(+:valid) transform:translate(14,10)scale(.75):has(+:focus)',
-        size === 'lg' && 'f:18 translate(16,22) transform:translate(16,14)scale(.75):has(+:valid) transform:translate(16,14)scale(.75):has(+:focus)'
+        size === 'md' && 'f:16 translate(14,18) translate(14,10)scale(.75):has(+:valid) translate(14,10)scale(.75):has(+:focus)',
+        size === 'lg' && 'f:18 translate(16,22) translate(16,14)scale(.75):has(+:valid) translate(16,14)scale(.75):has(+:focus)'
       ]"
     >
       {{ label }}
@@ -47,7 +47,7 @@ const value = computed({
       :type="type"
       :placeholder="placeholder"
       required
-      class="bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus fg:transparent::placeholder fg:gray-60:valid::placeholder fg:control-placeholder:focus::placeholder outline:control-outline|solid|2:focus-visible w:full"
+      class="bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus fg:transparent::placeholder fg:gray-60:valid::placeholder fg:control-placeholder:focus::placeholder outline:control-outline|solid|2:focus-visible transition:background-color|150ms|ease-in w:full"
       :class="[
         size === 'sm' && 'f:16 pb:5 pt:21 px:12 r:10',
         size === 'md' && 'f:16 pb:8 pt:26 px:14 r:12',
@@ -56,16 +56,3 @@ const value = computed({
     />
   </div>
 </template>
-
-<style scoped>
-input {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-span {
-  transition-property: transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-</style>

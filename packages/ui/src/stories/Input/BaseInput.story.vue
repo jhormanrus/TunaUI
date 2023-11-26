@@ -1,19 +1,31 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import BaseInput from '../../lib/Input/BaseInput.vue'
+
+const value = ref()
 </script>
 
 <template>
-  <Story :layout="{ type: 'grid', width: 240 }">
+  <Story :layout="{ type: 'grid', width: 240 }" auto-props-disabled>
     <Variant title="primary">
-      <BaseInput label="Input" size="sm" />
+      <BaseInput v-model="value" label="Input" size="sm" />
+      <template #controls>
+        <HstText v-model="value" title="v-model" />
+      </template>
     </Variant>
 
     <Variant title="secondary">
-      <BaseInput label="Input" />
+      <BaseInput v-model="value" label="Input" />
+      <template #controls>
+        <HstText v-model="value" title="v-model" />
+      </template>
     </Variant>
 
     <Variant title="destructive">
-      <BaseInput label="Input" size="lg" />
+      <BaseInput v-model="value" label="Input" size="lg" />
+      <template #controls>
+        <HstText v-model="value" title="v-model" />
+      </template>
     </Variant>
   </Story>
 </template>
