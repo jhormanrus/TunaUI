@@ -10,22 +10,23 @@
     "story:preview": "histoire preview"
   },
   "devDependencies": {
-    "@histoire/plugin-svelte": "^0.17.4",
-    "@histoire/plugin-vue": "^0.17.5",
+    "@histoire/plugin-svelte": "^0.17.6",
+    "@histoire/plugin-vue": "^0.17.6",
     "@master/eslint-config-css": "beta",
-    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@tsconfig/svelte": "^5.0.2",
-    "@typescript-eslint/parser": "^6.12.0",
-    "@vitejs/plugin-vue": "^4.5.0",
+    "@typescript-eslint/parser": "^6.13.1",
+    "@vitejs/plugin-vue": "^4.5.1",
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/tsconfig": "^0.4.0",
-    "eslint-plugin-svelte": "^2.35.0",
-    "eslint-plugin-vue": "^9.18.1",
-    "histoire": "^0.17.5",
+    "eslint-plugin-svelte": "^2.35.1",
+    "eslint-plugin-vue": "^9.19.2",
+    "histoire": "^0.17.6",
     "tslib": "^2.6.2",
-    "vite": "^5.0.0"
+    "vite": "^5.0.4"
   },
   "dependencies": {
-    "@master/css": "beta"
+    "@master/css": "beta",
+    "class-variant": "^2.0.0-beta.160"
   }
 }
