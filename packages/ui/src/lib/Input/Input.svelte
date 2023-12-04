@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { label as cvLabel, input as cvInput } from '../class-variants/input'
+
   export let id: string | null = null
   export let type: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' = 'text'
   export let size: 'sm' | 'lg' | 'md' = 'md'
@@ -9,25 +11,15 @@
 
 <div class="rel">
   <span
-    class="
-      abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform-origin:top|left
-      {size === 'sm' && 'f:16 translate(12,14) transform:translate(12,8)scale(.75):has(+:focus) transform:translate(12,8)scale(.75):has(+:valid)'}
-      {size === 'md' && 'f:16 translate(14,18) transform:translate(14,10)scale(.75):has(+:focus) transform:translate(14,10)scale(.75):has(+:valid)'}
-      {size === 'lg' && 'f:18 translate(16,22) transform:translate(16,14)scale(.75):has(+:focus) transform:translate(16,14)scale(.75):has(+:valid)'}
-    "
+    class={cvLabel({ size })}
   >{label}</span>
   <input
+    class={cvInput({ size })}
     {value}
     {id}
     {type}
     {placeholder}
     required
-    class="
-      bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus fg:transparent::placeholder fg:gray-60:valid::placeholder fg:control-placeholder:focus::placeholder outline:control-outline w:full
-      {size === 'sm' && 'f:16 px:12 pt:21 pb:5 r:10'}
-      {size === 'md' && 'f:16 px:14 pt:26 pb:8 r:12'}
-      {size === 'lg' && 'f:18 px:16 pt:32 pb:12 r:14'}
-    "
   />
 </div>
 
