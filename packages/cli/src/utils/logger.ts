@@ -12,8 +12,5 @@ export const logger = {
   },
   success (...text: unknown[]) {
     console.log(chalk.green(...text))
-  },
-  break () {
-    console.log('')
   }
 }

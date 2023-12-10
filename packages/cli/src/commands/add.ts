@@ -6,8 +6,7 @@ import { logger } from '@/utils/logger'
 import { fetchTree, getItemTargetPath, getRegistryBaseColor, getRegistryIndex, resolveTree } from '@/utils/registry'
 import chalk from 'chalk'
 import { Command } from 'commander'
-import ora from 'ora'
-import prompts from 'prompts'
+import * as p from '@clack/prompts'
 import { array, boolean, object, optional, parse, string } from 'valibot'
 
 const AddOptionsSchema = object({
@@ -62,17 +61,17 @@ export const add = new Command()
         ? registryIndex.map((entry) => entry.name)
         : options.components
       if (!options.components?.length && !options.all) {
-        const { components } = await prompts({
-          type: 'multiselect',
-          name: 'components',
+        const components = await p.multiselect({
           message: 'Which components would you like to add?',
-          hint: 'Space to select. A to toggle all. Enter to submit.',
-          instructions: false,
-          choices: registryIndex.map((entry) => ({
-            title: entry.name,
-            value: entry.name
+          options: registryIndex.map((entry) => ({
+            value: entry.name,
+            label: entry.name
           }))
         })
+        if (p.isCancel(components)) {
+          p.cancel('Operation cancelled.')
+          process.exit(0)
+        }
         selectedComponents = components
       }
 
@@ -92,21 +91,16 @@ export const add = new Command()
       }
 
       if (!options.yes) {
-        const { proceed } = await prompts({
-          type: 'confirm',
-          name: 'proceed',
-          message: 'Ready to install components and dependencies. Proceed?',
-          initial: true
+        const proceed = await p.confirm({
+          message: 'Ready to install components and dependencies. Proceed?'
         })
-
-        if (!proceed) {
-          process.exit(0)
-        }
+        if (!proceed) process.exit(0)
       }
 
-      const spinner = ora('Installing components...').start()
+      const spinner = p.spinner()
+      spinner.start('Installing components...')
       for (const item of payload) {
-        spinner.text = `Installing ${item.name}...`
+        spinner.message(`Installing ${item.name}...`)
         const targetDir = await getItemTargetPath(
           config,
           item,
@@ -128,11 +122,9 @@ export const add = new Command()
         if (existingComponent.length && !options.overwrite) {
           if (selectedComponents.includes(item.name)) {
             spinner.stop()
-            const { overwrite } = await prompts({
-              type: 'confirm',
-              name: 'overwrite',
+            const overwrite = await p.confirm({
               message: `Component ${item.name} already exists. Would you like to overwrite?`,
-              initial: false
+              initialValue: false
             })
 
             if (!overwrite) {
@@ -161,7 +153,7 @@ export const add = new Command()
           await proc.exited
         }
       }
-      spinner.succeed('Done.')
+      spinner.stop('Done.')
     } catch (error) {
       handleError(error)
     }

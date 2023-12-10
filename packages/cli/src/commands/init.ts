@@ -8,12 +8,11 @@ import * as templates from '@/utils/templates'
 import chalk from 'chalk'
 import { Command } from 'commander'
 import template from 'lodash.template'
-import ora from 'ora'
-import prompts from 'prompts'
 import { boolean, object, parse, string } from 'valibot'
+import * as p from '@clack/prompts'
 
 const PROJECT_DEPENDENCIES = [
-  'class-variance-authority'
+  'class-variant'
 ]
 
 const InitOptionsSchema = object({
@@ -47,9 +46,7 @@ export const init = new Command()
 
       await runInit(cwd, config)
 
-      logger.break()
       logger.info(`${chalk.green('Success!')} Project initialization completed.`)
-      logger.break()
     } catch (error) {
       handleError(error)
     }
@@ -58,52 +55,48 @@ export const init = new Command()
 export async function promptForConfig (cwd: string, defaultConfig: Config | null = null, skip = false): Promise<Config> {
   const highlight = (text: string): string => chalk.yellow(text)
 
-  const options = await prompts([
+  const options = await p.group(
     {
-      type: 'toggle',
-      name: 'typescript',
-      message: `Would you like to use ${highlight(
-        'TypeScript'
-      )} (recommended)?`,
-      initial: defaultConfig?.typescript ?? true,
-      active: 'yes',
-      inactive: 'no'
+      typescript: async () => await p.confirm({
+        message: `Would you like to use ${highlight('TypeScript')} (recommended)?`,
+        initialValue: defaultConfig?.typescript ?? true
+      }),
+      globalCss: async () => await p.text({
+        message: `Where is your ${highlight('global CSS')} file?`,
+        defaultValue: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS,
+        placeholder: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS
+      }),
+      mastercssCssVariables: async () => await p.select({
+        message: `Would you like to use ${highlight('CSS variables')} for colors?`,
+        options: [
+          { value: true, label: 'Yes' },
+          { value: false, label: 'No' }
+        ],
+        initialValue: defaultConfig?.mastercss.cssVariables ?? false
+      }),
+      mastercssConfig: async () => await p.text({
+        message: `Where is your ${highlight('master.css.js')} located?`,
+        defaultValue: defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG,
+        placeholder: defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG
+      }),
+      components: async () => await p.text({
+        message: `Configure the import alias for ${highlight('components')}:`,
+        defaultValue: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS,
+        placeholder: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS
+      }),
+      utils: async () => await p.text({
+        message: `Configure the import alias for ${highlight('utils')}:`,
+        defaultValue: defaultConfig?.aliases.utils ?? DEFAULT_UTILS,
+        placeholder: defaultConfig?.aliases.utils ?? DEFAULT_UTILS
+      })
     },
     {
-      type: 'text',
-      name: 'globalCss',
-      message: `Where is your ${highlight('global CSS')} file?`,
-      initial: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS
-    },
-    {
-      type: 'toggle',
-      name: 'mastercssCssVariables',
-      message: `Would you like to use ${highlight(
-        'CSS variables'
-      )} for colors?`,
-      initial: defaultConfig?.mastercss.cssVariables ?? false,
-      active: 'yes',
-      inactive: 'no'
-    },
-    {
-      type: 'text',
-      name: 'mastercssConfig',
-      message: `Where is your ${highlight('master.css.js')} located?`,
-      initial: defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG
-    },
-    {
-      type: 'text',
-      name: 'components',
-      message: `Configure the import alias for ${highlight('components')}:`,
-      initial: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS
-    },
-    {
-      type: 'text',
-      name: 'utils',
-      message: `Configure the import alias for ${highlight('utils')}:`,
-      initial: defaultConfig?.aliases.utils ?? DEFAULT_UTILS
+      onCancel: () => {
+        p.cancel('Operation cancelled.')
+        process.exit(0)
+      }
     }
-  ])
+  )
 
   const config = parse(RawConfigSchema, {
     $schema: 'https://ui.shadcn.com/schema.json',
@@ -120,32 +113,25 @@ export async function promptForConfig (cwd: string, defaultConfig: Config | null
   })
 
   if (!skip) {
-    const { proceed } = await prompts({
-      type: 'confirm',
-      name: 'proceed',
-      message: `Write configuration to ${highlight(
-        'components.json'
-      )}. Proceed?`,
-      initial: true
+    const proceed = await p.confirm({
+      message: `Write configuration to ${highlight('components.json')}. Proceed?`
     })
-
-    if (!proceed) {
-      process.exit(0)
-    }
+    if (!proceed) process.exit(0)
   }
 
   // Write to file.
-  logger.break()
-  const spinner = ora('Writing components.json...').start()
+  const spinner = p.spinner()
+  spinner.start('Writing components.json...')
   const targetPath = path.resolve(cwd, 'components.json')
   await fs.writeFile(targetPath, JSON.stringify(config, null, 2), 'utf8')
-  spinner.succeed()
+  spinner.stop('components.json written successfully.')
 
   return await resolveConfigPaths(cwd, config)
 }
 
 export async function runInit (cwd: string, config: Config): Promise<void> {
-  const spinner = ora('Initializing project...')?.start()
+  const spinner = p.spinner()
+  spinner.start('Initializing project...')
 
   // Ensure all resolved paths directories exist.
   for (const [key, resolvedPath] of Object.entries(config.resolvedPaths)) {
@@ -198,12 +184,12 @@ export async function runInit (cwd: string, config: Config): Promise<void> {
     'utf8'
   )
 
-  spinner?.succeed()
+  spinner.stop('Project initialized successfully.')
 
   // Install dependencies.
-  const dependenciesSpinner = ora('Installing dependencies...')?.start()
-
+  const dependenciesSpinner = p.spinner()
+  dependenciesSpinner.start('Installing dependencies...')
   const proc = Bun.spawn(['bun', 'add', ...PROJECT_DEPENDENCIES], { cwd })
   await proc.exited
-  dependenciesSpinner?.succeed()
+  dependenciesSpinner.stop('Dependencies installed successfully.')
 }
