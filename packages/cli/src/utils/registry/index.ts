@@ -1,11 +1,11 @@
 import path from 'path'
-import { type Config } from '@/src/utils/get-config'
+import { type Config } from '@/utils/get-config'
 import {
   RegistryBaseColorSchema,
   RegistryIndexSchema,
   type RegistryItemWithContentSchema,
   RegistryWithContentSchema
-} from '@/src/utils/registry/schema'
+} from '@/utils/registry/schema'
 import { type Input, parse } from 'valibot'
 
 const baseUrl = process.env.COMPONENTS_REGISTRY_URL ?? ''

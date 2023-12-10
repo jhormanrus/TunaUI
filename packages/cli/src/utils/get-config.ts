@@ -1,7 +1,7 @@
 import path from 'path'
-import { resolveImport } from '@/src/utils/resolve-import'
+import { resolveImport } from '@/utils/resolve-import'
 import { loadConfig } from 'tsconfig-paths'
-import { type Input, boolean, coerce, fallback, merge, object, optional, parse, strict, string } from 'valibot'
+import { type Input, boolean, coerce, fallback, merge, object, optional, parse, string, never } from 'valibot'
 import { lilconfig } from 'lilconfig'
 
 export const DEFAULT_COMPONENTS = '@/components'
@@ -13,7 +13,7 @@ const explorer = lilconfig('components', {
   searchPlaces: ['components.json']
 })
 
-export const RawConfigSchema = strict(object({
+export const RawConfigSchema = object({
   $schema: optional(string()),
   typescript: coerce(fallback(boolean(), true), Boolean),
   globalCss: string(),
@@ -25,7 +25,7 @@ export const RawConfigSchema = strict(object({
     components: string(),
     utils: string()
   })
-}))
+}, never())
 
 export type RawConfig = Input<typeof RawConfigSchema>
 
