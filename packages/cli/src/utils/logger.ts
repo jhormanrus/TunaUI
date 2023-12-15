@@ -1,16 +1,16 @@
-import chalk from 'chalk'
+import color from 'picocolors'
 
 export const logger = {
-  error (...text: unknown[]) {
-    console.log(chalk.red(...text))
+  error (text: string) {
+    console.log(color.red(text))
   },
-  warn (...text: unknown[]) {
-    console.log(chalk.yellow(...text))
+  warn (text: string) {
+    console.log(color.yellow(text))
   },
-  info (...text: unknown[]) {
-    console.log(chalk.cyan(...text))
+  info (text: string) {
+    console.log(color.cyan(text))
   },
-  success (...text: unknown[]) {
-    console.log(chalk.green(...text))
+  success (text: string) {
+    console.log(color.green(text))
   }
 }

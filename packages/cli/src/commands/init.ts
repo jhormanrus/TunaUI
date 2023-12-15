@@ -5,7 +5,7 @@ import { handleError } from '@/utils/handle-error'
 import { logger } from '@/utils/logger'
 // import { getRegistryBaseColor } from '@/utils/registry'
 import * as templates from '@/utils/templates'
-import chalk from 'chalk'
+import color from 'picocolors'
 import { Command } from 'commander'
 import template from 'lodash.template'
 import { boolean, object, parse, string } from 'valibot'
@@ -46,14 +46,16 @@ export const init = new Command()
 
       await runInit(cwd, config)
 
-      logger.info(`${chalk.green('Success!')} Project initialization completed.`)
+      p.outro(`${color.green('Success!')} Project initialization completed.`)
     } catch (error) {
       handleError(error)
     }
   })
 
 export async function promptForConfig (cwd: string, defaultConfig: Config | null = null, skip = false): Promise<Config> {
-  const highlight = (text: string): string => chalk.yellow(text)
+  const highlight = (text: string): string => color.yellow(text)
+
+  p.intro(`${color.bgCyan(color.bold(color.black(' TunaUI ')))}`)
 
   const options = await p.group(
     {

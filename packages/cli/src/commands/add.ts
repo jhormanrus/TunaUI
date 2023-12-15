@@ -4,7 +4,7 @@ import { getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { logger } from '@/utils/logger'
 import { fetchTree, getItemTargetPath, getRegistryBaseColor, getRegistryIndex, resolveTree } from '@/utils/registry'
-import chalk from 'chalk'
+import color from 'picocolors'
 import { Command } from 'commander'
 import * as p from '@clack/prompts'
 import { array, boolean, object, optional, parse, string } from 'valibot'
@@ -48,7 +48,7 @@ export const add = new Command()
       const config = await getConfig(cwd)
       if (!config) {
         logger.warn(
-          `Configuration is missing. Please run ${chalk.green(
+          `Configuration is missing. Please run ${color.green(
             'init'
           )} to create a components.json file.`
         )
@@ -129,7 +129,7 @@ export const add = new Command()
 
             if (!overwrite) {
               logger.info(
-                `Skipped ${item.name}. To overwrite, run with the ${chalk.green(
+                `Skipped ${item.name}. To overwrite, run with the ${color.green(
                   '--overwrite'
                 )} flag.`
               )
