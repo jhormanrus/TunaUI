@@ -20,6 +20,8 @@ const InitOptionsSchema = object({
   yes: boolean()
 })
 
+const projectInitSpinner = p.spinner()
+
 export const init = new Command()
   .name('init')
   .description('initialize your project and install dependencies')
@@ -46,7 +48,7 @@ export const init = new Command()
 
       await runInit(cwd, config)
 
-      p.outro(`${color.green('Success!')} Project initialization completed.`)
+      projectInitSpinner.stop(`${color.green('Success!')} Project initialization completed.`)
     } catch (error) {
       handleError(error)
     }
@@ -101,7 +103,7 @@ export async function promptForConfig (cwd: string, defaultConfig: Config | null
   )
 
   const config = parse(RawConfigSchema, {
-    $schema: 'https://ui.shadcn.com/schema.json',
+    $schema: 'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/cli/src/public/schema.json',
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,
@@ -122,18 +124,15 @@ export async function promptForConfig (cwd: string, defaultConfig: Config | null
   }
 
   // Write to file.
-  const spinner = p.spinner()
-  spinner.start('Writing components.json...')
+  projectInitSpinner.start(`Writing ${highlight('components.json')}...`)
   const targetPath = path.resolve(cwd, 'components.json')
-  await fs.writeFile(targetPath, JSON.stringify(config, null, 2), 'utf8')
-  spinner.stop('components.json written successfully.')
+  await Bun.write(targetPath, JSON.stringify(config, null, 2))
 
   return await resolveConfigPaths(cwd, config)
 }
 
 export async function runInit (cwd: string, config: Config): Promise<void> {
-  const spinner = p.spinner()
-  spinner.start('Initializing project...')
+  projectInitSpinner.message('Initializing project')
 
   // Ensure all resolved paths directories exist.
   for (const [key, resolvedPath] of Object.entries(config.resolvedPaths)) {
@@ -159,12 +158,11 @@ export async function runInit (cwd: string, config: Config): Promise<void> {
   const extension = config.typescript ? 'ts' : 'js'
 
   // Write mastercss config.
-  await fs.writeFile(
+  await Bun.write(
     config.resolvedPaths.mastercssConfig,
     config.mastercss.cssVariables
       ? template(templates.MASTERCSS_CONFIG_WITH_VARIABLES)({ extension })
-      : template(templates.MASTERCSS_CONFIG)({ extension }),
-    'utf8'
+      : template(templates.MASTERCSS_CONFIG)({ extension })
   )
 
   // Write css file.
@@ -180,18 +178,13 @@ export async function runInit (cwd: string, config: Config): Promise<void> {
   // }
 
   // Write cn file.
-  await fs.writeFile(
+  await Bun.write(
     `${config.resolvedPaths.utils}.${extension}`,
-    extension === 'ts' ? templates.UTILS : templates.UTILS_JS,
-    'utf8'
+    extension === 'ts' ? templates.UTILS : templates.UTILS_JS
   )
 
-  spinner.stop('Project initialized successfully.')
-
   // Install dependencies.
-  const dependenciesSpinner = p.spinner()
-  dependenciesSpinner.start('Installing dependencies...')
-  const proc = Bun.spawn(['bun', 'add', ...PROJECT_DEPENDENCIES], { cwd })
+  projectInitSpinner.message('Installing dependencies')
+  const proc = Bun.spawn(['bun', 'add', '--silent', ...PROJECT_DEPENDENCIES], { cwd })
   await proc.exited
-  dependenciesSpinner.stop('Dependencies installed successfully.')
 }
