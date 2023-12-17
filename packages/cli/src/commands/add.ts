@@ -114,10 +114,6 @@ export const add = new Command()
           continue
         }
 
-        if (!existsSync(targetDir)) {
-          await fs.mkdir(targetDir, { recursive: true })
-        }
-
         const existingComponent = item.files.filter((file) =>
           existsSync(path.resolve(targetDir, file.name)),
         )
@@ -147,7 +143,7 @@ export const add = new Command()
 
         for (const file of item.files) {
           const filePath = path.resolve(targetDir, file.name)
-          await fs.writeFile(filePath, file.content)
+          await Bun.write(filePath, file.content)
         }
 
         // Install dependencies.
