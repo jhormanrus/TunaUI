@@ -1,23 +1,30 @@
 import { existsSync, promises as fs } from 'fs'
 import path from 'path'
-import { DEFAULT_COMPONENTS, DEFAULT_GLOBAL_CSS, DEFAULT_MASTERCSS_CONFIG, DEFAULT_UTILS, getConfig, RawConfigSchema, resolveConfigPaths, type Config } from '@/utils/get-config'
+import {
+  type Config,
+  DEFAULT_COMPONENTS,
+  DEFAULT_GLOBAL_CSS,
+  DEFAULT_MASTERCSS_CONFIG,
+  DEFAULT_UTILS,
+  RawConfigSchema,
+  getConfig,
+  resolveConfigPaths,
+} from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { logger } from '@/utils/logger'
 // import { getRegistryBaseColor } from '@/utils/registry'
 import * as templates from '@/utils/templates'
-import color from 'picocolors'
+import * as p from '@clack/prompts'
 import { Command } from 'commander'
 import template from 'lodash.template'
+import color from 'picocolors'
 import { boolean, object, parse, string } from 'valibot'
-import * as p from '@clack/prompts'
 
-const PROJECT_DEPENDENCIES = [
-  'class-variant'
-]
+const PROJECT_DEPENDENCIES = ['class-variant']
 
 const InitOptionsSchema = object({
   cwd: string(),
-  yes: boolean()
+  yes: boolean(),
 })
 
 const projectInitSpinner = p.spinner()
@@ -29,7 +36,7 @@ export const init = new Command()
   .option(
     '-c, --cwd <cwd>',
     'the working directory. defaults to the current directory.',
-    process.cwd()
+    process.cwd(),
   )
   .action(async (opts) => {
     try {
@@ -48,77 +55,98 @@ export const init = new Command()
 
       await runInit(cwd, config)
 
-      projectInitSpinner.stop(`${color.green('Success!')} Project initialization completed.`)
+      projectInitSpinner.stop(
+        `${color.green('Success!')} Project initialization completed.`,
+      )
     } catch (error) {
       handleError(error)
     }
   })
 
-export async function promptForConfig (cwd: string, defaultConfig: Config | null = null, skip = false): Promise<Config> {
+export async function promptForConfig(
+  cwd: string,
+  defaultConfig: Config | null = null,
+  skip = false,
+): Promise<Config> {
   const highlight = (text: string): string => color.yellow(text)
 
   p.intro(`${color.bgCyan(color.bold(color.black(' TunaUI ')))}`)
 
   const options = await p.group(
     {
-      typescript: async () => await p.confirm({
-        message: `Would you like to use ${highlight('TypeScript')} (recommended)?`,
-        initialValue: defaultConfig?.typescript ?? true
-      }),
-      globalCss: async () => await p.text({
-        message: `Where is your ${highlight('global CSS')} file?`,
-        defaultValue: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS,
-        placeholder: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS
-      }),
-      mastercssCssVariables: async () => await p.select({
-        message: `Would you like to use ${highlight('CSS variables')} for colors?`,
-        options: [
-          { value: true, label: 'Yes' },
-          { value: false, label: 'No' }
-        ],
-        initialValue: defaultConfig?.mastercss.cssVariables ?? false
-      }),
-      mastercssConfig: async () => await p.text({
-        message: `Where is your ${highlight('master.css.js')} located?`,
-        defaultValue: defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG,
-        placeholder: defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG
-      }),
-      components: async () => await p.text({
-        message: `Configure the import alias for ${highlight('components')}:`,
-        defaultValue: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS,
-        placeholder: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS
-      }),
-      utils: async () => await p.text({
-        message: `Configure the import alias for ${highlight('utils')}:`,
-        defaultValue: defaultConfig?.aliases.utils ?? DEFAULT_UTILS,
-        placeholder: defaultConfig?.aliases.utils ?? DEFAULT_UTILS
-      })
+      typescript: async () =>
+        await p.confirm({
+          message: `Would you like to use ${highlight(
+            'TypeScript',
+          )} (recommended)?`,
+          initialValue: defaultConfig?.typescript ?? true,
+        }),
+      globalCss: async () =>
+        await p.text({
+          message: `Where is your ${highlight('global CSS')} file?`,
+          defaultValue: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS,
+          placeholder: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS,
+        }),
+      mastercssCssVariables: async () =>
+        await p.select({
+          message: `Would you like to use ${highlight(
+            'CSS variables',
+          )} for colors?`,
+          options: [
+            { value: true, label: 'Yes' },
+            { value: false, label: 'No' },
+          ],
+          initialValue: defaultConfig?.mastercss.cssVariables ?? false,
+        }),
+      mastercssConfig: async () =>
+        await p.text({
+          message: `Where is your ${highlight('master.css.js')} located?`,
+          defaultValue:
+            defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG,
+          placeholder:
+            defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG,
+        }),
+      components: async () =>
+        await p.text({
+          message: `Configure the import alias for ${highlight('components')}:`,
+          defaultValue: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS,
+          placeholder: defaultConfig?.aliases.components ?? DEFAULT_COMPONENTS,
+        }),
+      utils: async () =>
+        await p.text({
+          message: `Configure the import alias for ${highlight('utils')}:`,
+          defaultValue: defaultConfig?.aliases.utils ?? DEFAULT_UTILS,
+          placeholder: defaultConfig?.aliases.utils ?? DEFAULT_UTILS,
+        }),
     },
     {
       onCancel: () => {
         p.cancel('Operation cancelled.')
         process.exit(0)
-      }
-    }
+      },
+    },
   )
 
   const config = parse(RawConfigSchema, {
-    $schema: 'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/cli/src/public/schema.json',
+    $schema:
+      'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/cli/src/public/schema.json',
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,
-      cssVariables: options.mastercssCssVariables
+      cssVariables: options.mastercssCssVariables,
     },
     typescript: options.typescript,
     aliases: {
       utils: options.utils,
-      components: options.components
-    }
+      components: options.components,
+    },
   })
 
   if (!skip) {
     const proceed = await p.confirm({
-      message: `Write configuration to ${highlight('components.json')}. Proceed?`
+      message: `Write configuration to ${highlight(
+        'components.json',
+      )}. Proceed?`,
     })
     if (!proceed) process.exit(0)
   }
@@ -131,7 +159,7 @@ export async function promptForConfig (cwd: string, defaultConfig: Config | null
   return await resolveConfigPaths(cwd, config)
 }
 
-export async function runInit (cwd: string, config: Config): Promise<void> {
+export async function runInit(cwd: string, config: Config): Promise<void> {
   projectInitSpinner.message('Initializing project')
 
   // Ensure all resolved paths directories exist.
@@ -162,7 +190,7 @@ export async function runInit (cwd: string, config: Config): Promise<void> {
     config.resolvedPaths.mastercssConfig,
     config.mastercss.cssVariables
       ? template(templates.MASTERCSS_CONFIG_WITH_VARIABLES)({ extension })
-      : template(templates.MASTERCSS_CONFIG)({ extension })
+      : template(templates.MASTERCSS_CONFIG)({ extension }),
   )
 
   // Write css file.
@@ -180,11 +208,13 @@ export async function runInit (cwd: string, config: Config): Promise<void> {
   // Write cn file.
   await Bun.write(
     `${config.resolvedPaths.utils}.${extension}`,
-    extension === 'ts' ? templates.UTILS : templates.UTILS_JS
+    extension === 'ts' ? templates.UTILS : templates.UTILS_JS,
   )
 
   // Install dependencies.
   projectInitSpinner.message('Installing dependencies')
-  const proc = Bun.spawn(['bun', 'add', '--silent', ...PROJECT_DEPENDENCIES], { cwd })
+  const proc = Bun.spawn(['bun', 'add', '--silent', ...PROJECT_DEPENDENCIES], {
+    cwd,
+  })
   await proc.exited
 }

@@ -3,10 +3,16 @@ import path from 'path'
 import { getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { logger } from '@/utils/logger'
-import { fetchTree, getItemTargetPath, getRegistryBaseColor, getRegistryIndex, resolveTree } from '@/utils/registry'
-import color from 'picocolors'
-import { Command } from 'commander'
+import {
+  fetchTree,
+  getItemTargetPath,
+  getRegistryBaseColor,
+  getRegistryIndex,
+  resolveTree,
+} from '@/utils/registry'
 import * as p from '@clack/prompts'
+import { Command } from 'commander'
+import color from 'picocolors'
 import { array, boolean, object, optional, parse, string } from 'valibot'
 
 const AddOptionsSchema = object({
@@ -15,7 +21,7 @@ const AddOptionsSchema = object({
   overwrite: boolean(),
   cwd: string(),
   all: boolean(),
-  path: optional(string())
+  path: optional(string()),
 })
 
 export const add = new Command()
@@ -27,7 +33,7 @@ export const add = new Command()
   .option(
     '-c, --cwd <cwd>',
     'the working directory. defaults to the current directory.',
-    process.cwd()
+    process.cwd(),
   )
   .option('-a, --all', 'add all available components.', false)
   .option('-p, --path <path>', 'the path to add the component to.')
@@ -35,7 +41,7 @@ export const add = new Command()
     try {
       const options = parse(AddOptionsSchema, {
         components,
-        ...opts
+        ...opts,
       })
 
       const cwd = path.resolve(options.cwd)
@@ -49,8 +55,8 @@ export const add = new Command()
       if (!config) {
         logger.warn(
           `Configuration is missing. Please run ${color.green(
-            'init'
-          )} to create a components.json file.`
+            'init',
+          )} to create a components.json file.`,
         )
         process.exit(1)
       }
@@ -60,13 +66,13 @@ export const add = new Command()
       let selectedComponents = options.all
         ? registryIndex.map((entry) => entry.name)
         : options.components
-      if (!options.components?.length && !options.all) {
+      if (!(options.components?.length || options.all)) {
         const components = await p.multiselect({
           message: 'Which components would you like to add?',
           options: registryIndex.map((entry) => ({
             value: entry.name,
-            label: entry.name
-          }))
+            label: entry.name,
+          })),
         })
         if (p.isCancel(components)) {
           p.cancel('Operation cancelled.')
@@ -92,7 +98,7 @@ export const add = new Command()
 
       if (!options.yes) {
         const proceed = await p.confirm({
-          message: 'Ready to install components and dependencies. Proceed?'
+          message: 'Ready to install components and dependencies. Proceed?',
         })
         if (!proceed) process.exit(0)
       }
@@ -104,7 +110,7 @@ export const add = new Command()
         const targetDir = await getItemTargetPath(
           config,
           item,
-          options.path ? path.resolve(cwd, options.path) : undefined
+          options.path ? path.resolve(cwd, options.path) : undefined,
         )
 
         if (!targetDir) {
@@ -116,7 +122,7 @@ export const add = new Command()
         }
 
         const existingComponent = item.files.filter((file) =>
-          existsSync(path.resolve(targetDir, file.name))
+          existsSync(path.resolve(targetDir, file.name)),
         )
 
         if (existingComponent.length && !options.overwrite) {
@@ -124,14 +130,14 @@ export const add = new Command()
             spinner.stop()
             const overwrite = await p.confirm({
               message: `Component ${item.name} already exists. Would you like to overwrite?`,
-              initialValue: false
+              initialValue: false,
             })
 
             if (!overwrite) {
               logger.info(
                 `Skipped ${item.name}. To overwrite, run with the ${color.green(
-                  '--overwrite'
-                )} flag.`
+                  '--overwrite',
+                )} flag.`,
               )
               continue
             }

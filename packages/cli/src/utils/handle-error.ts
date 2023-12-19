@@ -1,6 +1,6 @@
 import { logger } from '@/utils/logger'
 
-export function handleError (error: unknown): void {
+export function handleError(error: unknown): void {
   if (typeof error === 'string') {
     logger.error(error)
     process.exit(1)

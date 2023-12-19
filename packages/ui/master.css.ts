@@ -11,15 +11,15 @@ const config: Config = {
       label: '#57534e',
       placeholder: '#a8a29e',
       hover: {
-        bg: '#efeded'
-      }
-    }
+        bg: '#efeded',
+      },
+    },
   },
   semantics: {},
   mediaQueries: {},
   animations: {},
   selectors: {},
-  functions: {}
+  functions: {},
 }
 
 export default config

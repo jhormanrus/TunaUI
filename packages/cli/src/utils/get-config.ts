@@ -1,8 +1,19 @@
 import path from 'path'
 import { resolveImport } from '@/utils/resolve-import'
-import { loadConfig } from 'tsconfig-paths'
-import { type Input, boolean, coerce, fallback, merge, object, optional, parse, string, never } from 'valibot'
 import { lilconfig } from 'lilconfig'
+import { loadConfig } from 'tsconfig-paths'
+import {
+  type Input,
+  boolean,
+  coerce,
+  fallback,
+  merge,
+  never,
+  object,
+  optional,
+  parse,
+  string,
+} from 'valibot'
 
 export const DEFAULT_COMPONENTS = '@/components'
 export const DEFAULT_UTILS = '@/lib/utils'
@@ -10,37 +21,43 @@ export const DEFAULT_GLOBAL_CSS = 'src/globals.css'
 export const DEFAULT_MASTERCSS_CONFIG = 'master.css.js'
 
 const explorer = lilconfig('components', {
-  searchPlaces: ['components.json']
+  searchPlaces: ['components.json'],
 })
 
-export const RawConfigSchema = object({
-  $schema: optional(string()),
-  typescript: coerce(fallback(boolean(), true), Boolean),
-  globalCss: string(),
-  mastercss: object({
-    config: string(),
-    cssVariables: fallback(boolean(), true)
-  }),
-  aliases: object({
-    components: string(),
-    utils: string()
-  })
-}, never())
+export const RawConfigSchema = object(
+  {
+    $schema: optional(string()),
+    typescript: coerce(fallback(boolean(), true), Boolean),
+    globalCss: string(),
+    mastercss: object({
+      config: string(),
+      cssVariables: fallback(boolean(), true),
+    }),
+    aliases: object({
+      components: string(),
+      utils: string(),
+    }),
+  },
+  never(),
+)
 
 export type RawConfig = Input<typeof RawConfigSchema>
 
-export const ConfigSchema = merge([RawConfigSchema, object({
-  resolvedPaths: object({
-    mastercssConfig: string(),
-    globalCss: string(),
-    utils: string(),
-    components: string()
-  })
-})])
+export const ConfigSchema = merge([
+  RawConfigSchema,
+  object({
+    resolvedPaths: object({
+      mastercssConfig: string(),
+      globalCss: string(),
+      utils: string(),
+      components: string(),
+    }),
+  }),
+])
 
 export type Config = Input<typeof ConfigSchema>
 
-export async function getConfig (cwd: string): Promise<Config | null> {
+export async function getConfig(cwd: string): Promise<Config | null> {
   const config = await getRawConfig(cwd)
 
   if (!config) {
@@ -50,13 +67,16 @@ export async function getConfig (cwd: string): Promise<Config | null> {
   return await resolveConfigPaths(cwd, config)
 }
 
-export async function resolveConfigPaths (cwd: string, config: RawConfig): Promise<Config> {
+export async function resolveConfigPaths(
+  cwd: string,
+  config: RawConfig,
+): Promise<Config> {
   // Read tsconfig.json.
   const tsConfig = loadConfig(cwd)
 
   if (tsConfig.resultType === 'failed') {
     throw new Error(
-      `Failed to load tsconfig.json. ${tsConfig.message ?? ''}`.trim()
+      `Failed to load tsconfig.json. ${tsConfig.message ?? ''}`.trim(),
     )
   }
 
@@ -66,12 +86,12 @@ export async function resolveConfigPaths (cwd: string, config: RawConfig): Promi
       mastercssConfig: path.resolve(cwd, config.mastercss.config),
       globalCss: path.resolve(cwd, config.globalCss),
       utils: await resolveImport(config.aliases.utils, tsConfig),
-      components: await resolveImport(config.aliases.components, tsConfig)
-    }
+      components: await resolveImport(config.aliases.components, tsConfig),
+    },
   })
 }
 
-export async function getRawConfig (cwd: string): Promise<RawConfig | null> {
+export async function getRawConfig(cwd: string): Promise<RawConfig | null> {
   try {
     const configResult = await explorer.search(cwd)
 
@@ -80,7 +100,7 @@ export async function getRawConfig (cwd: string): Promise<RawConfig | null> {
     }
 
     return parse(RawConfigSchema, configResult.config)
-  } catch (error) {
+  } catch {
     throw new Error(`Invalid configuration found in ${cwd}/components.json.`)
   }
 }

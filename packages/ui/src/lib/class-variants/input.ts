@@ -6,9 +6,9 @@ export const label = cv(
     size: {
       sm: 'f:16 translate(12,14) translate(12,8)scale(.75):has(+:valid) translate(12,8)scale(.75):has(+:focus)',
       md: 'f:16 translate(14,18) translate(14,10)scale(.75):has(+:valid) translate(14,10)scale(.75):has(+:focus)',
-      lg: 'f:18 translate(16,22) translate(16,14)scale(.75):has(+:valid) translate(16,14)scale(.75):has(+:focus)'
-    }
-  }
+      lg: 'f:18 translate(16,22) translate(16,14)scale(.75):has(+:valid) translate(16,14)scale(.75):has(+:focus)',
+    },
+  },
 )
 
 export const input = cv(
@@ -17,7 +17,7 @@ export const input = cv(
     size: {
       sm: 'f:16 pb:5 pt:21 px:12 r:10',
       md: 'f:16 pb:8 pt:26 px:14 r:12',
-      lg: 'f:18 pb:12 pt:32 px:16 r:14'
-    }
-  }
+      lg: 'f:18 pb:12 pt:32 px:16 r:14',
+    },
+  },
 )

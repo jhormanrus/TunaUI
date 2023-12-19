@@ -3,6 +3,12 @@
   "linter": {
     "rules": {
       "all": true,
+      "correctness": {
+        "noUndeclaredVariables": "off"
+      },
+      "style": {
+        "useBlockStatements": "off"
+      },
       "suspicious": {
         "noConsoleLog": "off"
       },
