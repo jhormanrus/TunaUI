@@ -1,43 +1,35 @@
 module.exports = {
-	root: true,
-	extends: [
-		'@master/css',
-		'standard-with-typescript',
-		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
-	],
-	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint'],
-	parserOptions: {
-		sourceType: 'module',
-		ecmaVersion: 'latest',
-		extraFileExtensions: ['.svelte', '.vue'],
-		project: './tsconfig.json'
-	},
-	env: {
-		browser: true,
-		es2017: true,
-		node: true
-	},
 	overrides: [
 		{
 			files: ['*.svelte'],
-			extends: ['plugin:svelte/recommended'],
+			extends: [
+				'@master/css',
+				'standard-with-typescript',
+				'plugin:@typescript-eslint/recommended',
+				'plugin:svelte/recommended',
+				'eslint:recommended',
+			],
 			parser: 'svelte-eslint-parser',
 			parserOptions: {
 				parser: '@typescript-eslint/parser',
+				extraFileExtensions: ['.svelte', '.vue']
 			}
 		},
 		{
 			files: ['*.vue'],
-			extends: ['plugin:vue/vue3-essential', '@vue/eslint-config-typescript'],
+			extends: [
+				'@master/css',
+				'standard-with-typescript',
+				'plugin:@typescript-eslint/recommended',
+				'plugin:vue/vue3-essential',
+				'eslint:recommended',
+				'@vue/eslint-config-typescript',
+			],
 			parserOptions: {
 				parser: '@typescript-eslint/parser',
+				extraFileExtensions: ['.svelte', '.vue']
 			}
 		}
 	],
-	rules: {
-		'@typescript-eslint/triple-slash-reference': 'off'
-	},
-	ignorePatterns: ['*.cjs', '*.js']
+	ignorePatterns: ['*.js']
 }
