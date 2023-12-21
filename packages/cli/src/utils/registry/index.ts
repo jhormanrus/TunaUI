@@ -3,19 +3,20 @@ import { type Config } from '@/utils/get-config'
 import {
   RegistryBaseColorSchema,
   RegistryIndexSchema,
+  RegistryItemSchema,
   type RegistryItemWithContentSchema,
   RegistryWithContentSchema,
 } from '@/utils/registry/schema'
-import { type Input, parse } from 'valibot'
+import { type Input, SetInput, parse } from 'valibot'
 
-const baseUrl = process.env.COMPONENTS_REGISTRY_URL ?? ''
+const baseUrl =
+  process.env.COMPONENTS_REGISTRY_URL ?? 'https://tuna-ui.vercel.app'
 
 export async function getRegistryIndex(): Promise<
   Input<typeof RegistryIndexSchema>
 > {
   try {
-    const [result] = await fetchRegistry(['index.json'])
-
+    const [result] = await fetchRegistry(['registry.json'])
     return parse(RegistryIndexSchema, result)
   } catch {
     throw new Error('Failed to fetch components from registry.')
@@ -38,33 +39,31 @@ export async function resolveTree(
   index: Input<typeof RegistryIndexSchema>,
   names: string[],
 ): Promise<Input<typeof RegistryIndexSchema>> {
-  const tree: Input<typeof RegistryIndexSchema> = []
+  const tree: SetInput<typeof RegistryItemSchema> = new Set()
 
   for (const name of names) {
     const entry = index.find((entry) => entry.name === name)
 
     if (!entry) continue
 
-    tree.push(entry)
+    tree.add(entry)
 
     if (entry.registryDependencies) {
       const dependencies = await resolveTree(index, entry.registryDependencies)
-      tree.push(...dependencies)
+      for (const dependency of dependencies) {
+        tree.add(dependency)
+      }
     }
   }
 
-  return tree.filter(
-    (component, index, self) =>
-      self.findIndex((c) => c.name === component.name) === index,
-  )
+  return [...tree]
 }
 
 export async function fetchTree(
-  style: string,
   tree: Input<typeof RegistryIndexSchema>,
 ): Promise<Input<typeof RegistryWithContentSchema>> {
   try {
-    const paths = tree.map((item) => `styles/${style}/${item.name}.json`)
+    const paths = tree.map((item) => `${item.name}.json`)
     const result = await fetchRegistry(paths)
 
     return parse(RegistryWithContentSchema, result)
@@ -98,7 +97,7 @@ async function fetchRegistry(paths: string[]): Promise<unknown[]> {
   try {
     const results = await Promise.all(
       paths.map(async (path) => {
-        const response = await fetch(`${baseUrl}/registry/${path}`)
+        const response = await fetch(`${baseUrl}/${path}`)
         return await response.json()
       }),
     )

@@ -16,7 +16,7 @@ import color from 'picocolors'
 import { array, boolean, object, optional, parse, string } from 'valibot'
 
 const AddOptionsSchema = object({
-  components: optional(array(string())),
+  components: array(string()),
   yes: boolean(),
   overwrite: boolean(),
   cwd: string(),
@@ -66,6 +66,7 @@ export const add = new Command()
       let selectedComponents = options.all
         ? registryIndex.map((entry) => entry.name)
         : options.components
+
       if (!(options.components?.length || options.all)) {
         const components = await p.multiselect({
           message: 'Which components would you like to add?',
@@ -78,16 +79,11 @@ export const add = new Command()
           p.cancel('Operation cancelled.')
           process.exit(0)
         }
-        selectedComponents = components
-      }
-
-      if (!selectedComponents?.length) {
-        logger.warn('No components selected. Exiting.')
-        process.exit(0)
+        selectedComponents = components as string[]
       }
 
       const tree = await resolveTree(registryIndex, selectedComponents)
-      const payload = await fetchTree('default', tree)
+      const payload = await fetchTree(tree)
       const baseColor = await getRegistryBaseColor('slate')
       console.log(baseColor)
 

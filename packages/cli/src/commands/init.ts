@@ -128,8 +128,7 @@ export async function promptForConfig(
   )
 
   const config = parse(RawConfigSchema, {
-    $schema:
-      'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/cli/src/public/schema.json',
+    $schema: 'https://tuna-ui.vercel.app/schema.json',
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,
