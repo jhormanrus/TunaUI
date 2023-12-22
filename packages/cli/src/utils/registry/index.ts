@@ -23,11 +23,11 @@ export async function getRegistryIndex(): Promise<
   }
 }
 
-export async function getRegistryBaseColor(
-  baseColor: string,
-): Promise<Input<typeof RegistryBaseColorSchema>> {
+export async function getRegistryBaseColor(): Promise<
+  Input<typeof RegistryBaseColorSchema>
+> {
   try {
-    const [result] = await fetchRegistry([`colors/${baseColor}.json`])
+    const [result] = await fetchRegistry(['master.css.ts'])
 
     return parse(RegistryBaseColorSchema, result)
   } catch {
@@ -63,10 +63,18 @@ export async function fetchTree(
   tree: Input<typeof RegistryIndexSchema>,
 ): Promise<Input<typeof RegistryWithContentSchema>> {
   try {
-    const paths = tree.map((item) => `${item.name}.json`)
+    const paths = tree.map((item) => item.files[0])
     const result = await fetchRegistry(paths)
-
-    return parse(RegistryWithContentSchema, result)
+    const registryWithContent = tree.map((item, index) => ({
+      ...item,
+      files: [
+        {
+          name: item.files[0].split('/').pop(),
+          content: result[index],
+        },
+      ],
+    }))
+    return parse(RegistryWithContentSchema, registryWithContent)
   } catch {
     throw new Error('Failed to fetch tree from registry.')
   }
@@ -104,7 +112,6 @@ async function fetchRegistry(paths: string[]): Promise<unknown[]> {
 
     return results
   } catch (error) {
-    console.log(error)
     throw new Error(`Failed to fetch registry from ${baseUrl}.`)
   }
 }

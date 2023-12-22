@@ -59,6 +59,7 @@ export const add = new Command()
           )} to create a components.json file.`,
         )
         process.exit(1)
+        return
       }
 
       const registryIndex = await getRegistryIndex()
@@ -84,8 +85,8 @@ export const add = new Command()
 
       const tree = await resolveTree(registryIndex, selectedComponents)
       const payload = await fetchTree(tree)
-      const baseColor = await getRegistryBaseColor('slate')
-      console.log(baseColor)
+      // const baseColor = await getRegistryBaseColor()
+      // console.log(baseColor)
 
       if (!payload.length) {
         logger.warn('Selected components not found. Exiting.')
@@ -100,9 +101,9 @@ export const add = new Command()
       }
 
       const spinner = p.spinner()
-      spinner.start('Installing components...')
+      spinner.start('Installing components')
       for (const item of payload) {
-        spinner.message(`Installing ${item.name}...`)
+        spinner.message(`Installing ${item.name}`)
         const targetDir = await getItemTargetPath(
           config,
           item,
