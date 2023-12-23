@@ -13,12 +13,9 @@
       "properties": {
         "config": {
           "type": "string"
-        },
-        "cssVariables": {
-          "type": "boolean"
         }
       },
-      "required": ["config", "cssVariables"]
+      "required": ["config"]
     },
     "aliases": {
       "type": "object",

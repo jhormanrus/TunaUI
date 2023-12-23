@@ -16,8 +16,8 @@ import {
 } from 'valibot'
 
 export const DEFAULT_COMPONENTS = '@/components'
-export const DEFAULT_UTILS = '@/lib/utils'
-export const DEFAULT_GLOBAL_CSS = 'src/globals.css'
+export const DEFAULT_UTILS = '@/utils'
+export const DEFAULT_GLOBAL_CSS = 'src/app.css'
 export const DEFAULT_MASTERCSS_CONFIG = 'master.css.js'
 
 const explorer = lilconfig('components', {
@@ -31,7 +31,6 @@ export const RawConfigSchema = object(
     globalCss: string(),
     mastercss: object({
       config: string(),
-      cssVariables: fallback(boolean(), true),
     }),
     aliases: object({
       components: string(),

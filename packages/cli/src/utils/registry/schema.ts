@@ -8,7 +8,6 @@ import {
   string,
 } from 'valibot'
 
-// TODO: Extract this to a shared package.
 export const RegistryItemSchema = object({
   name: string(),
   dependencies: optional(array(string())),

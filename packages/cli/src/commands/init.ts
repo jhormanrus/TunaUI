@@ -87,17 +87,6 @@ export async function promptForConfig(
           defaultValue: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS,
           placeholder: defaultConfig?.globalCss ?? DEFAULT_GLOBAL_CSS,
         }),
-      mastercssCssVariables: async () =>
-        await p.select({
-          message: `Would you like to use ${highlight(
-            'CSS variables',
-          )} for colors?`,
-          options: [
-            { value: true, label: 'Yes' },
-            { value: false, label: 'No' },
-          ],
-          initialValue: defaultConfig?.mastercss.cssVariables ?? false,
-        }),
       mastercssConfig: async () =>
         await p.text({
           message: `Where is your ${highlight('master.css.js')} located?`,
@@ -132,7 +121,6 @@ export async function promptForConfig(
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,
-      cssVariables: options.mastercssCssVariables,
     },
     typescript: options.typescript,
     aliases: {
@@ -187,9 +175,7 @@ export async function runInit(cwd: string, config: Config): Promise<void> {
   // Write mastercss config.
   await Bun.write(
     config.resolvedPaths.mastercssConfig,
-    config.mastercss.cssVariables
-      ? template(templates.MASTERCSS_CONFIG_WITH_VARIABLES)({ extension })
-      : template(templates.MASTERCSS_CONFIG)({ extension }),
+    template(templates.MASTERCSS_CONFIG)({ extension }),
   )
 
   // Write css file.
@@ -197,18 +183,10 @@ export async function runInit(cwd: string, config: Config): Promise<void> {
   // if (baseColor) {
   //   await fs.writeFile(
   //     config.resolvedPaths.globalCss,
-  //     config.mastercss.cssVariables
-  //       ? baseColor.cssVarsTemplate
-  //       : baseColor.inlineColorsTemplate,
+  //     baseColor.inlineColorsTemplate,
   //     'utf8'
   //   )
   // }
-
-  // Write cn file.
-  await Bun.write(
-    `${config.resolvedPaths.utils}.${extension}`,
-    extension === 'ts' ? templates.UTILS : templates.UTILS_JS,
-  )
 
   // Install dependencies.
   projectInitSpinner.message('Installing dependencies')
