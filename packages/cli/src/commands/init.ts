@@ -12,11 +12,10 @@ import {
 } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { logger } from '@/utils/logger'
+import { getMastercssConfig } from '@/utils/registry'
 // import { getRegistryBaseColor } from '@/utils/registry'
-import * as templates from '@/utils/templates'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
-import template from 'lodash.template'
 import color from 'picocolors'
 import { boolean, object, parse, string } from 'valibot'
 
@@ -170,13 +169,9 @@ export async function runInit(cwd: string, config: Config): Promise<void> {
     }
   }
 
-  const extension = config.typescript ? 'ts' : 'js'
-
   // Write mastercss config.
-  await Bun.write(
-    config.resolvedPaths.mastercssConfig,
-    template(templates.MASTERCSS_CONFIG)({ extension }),
-  )
+  const mastercssConfig = await getMastercssConfig()
+  await Bun.write(config.resolvedPaths.mastercssConfig, mastercssConfig)
 
   // Write css file.
   // const baseColor = await getRegistryBaseColor('slate')

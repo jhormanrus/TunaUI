@@ -18,7 +18,7 @@ import {
 export const DEFAULT_COMPONENTS = '@/components'
 export const DEFAULT_UTILS = '@/utils'
 export const DEFAULT_GLOBAL_CSS = 'src/app.css'
-export const DEFAULT_MASTERCSS_CONFIG = 'master.css.js'
+export const DEFAULT_MASTERCSS_CONFIG = 'master.css.ts'
 
 const explorer = lilconfig('components', {
   searchPlaces: ['components.json'],

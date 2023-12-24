@@ -9,17 +9,23 @@ import {
 } from '@/utils/registry/schema'
 import { type Input, SetInput, parse } from 'valibot'
 
-const baseUrl =
-  process.env.COMPONENTS_REGISTRY_URL ?? 'https://tuna-ui.vercel.app'
-
 const sourceUrl =
   'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/ui'
+
+export async function getMastercssConfig(): Promise<string> {
+  try {
+    const [result] = await fetchFromSource(['master.css.ts'])
+    return result
+  } catch {
+    throw new Error('Failed to fetch master.css.ts from registry.')
+  }
+}
 
 export async function getRegistryIndex(): Promise<
   Input<typeof RegistryIndexSchema>
 > {
   try {
-    const [result] = await fetchRegistry(['registry.json'])
+    const [result] = await fetchFromSource(['registry.json'])
     return parse(RegistryIndexSchema, result)
   } catch {
     throw new Error('Failed to fetch components from registry.')
@@ -102,21 +108,6 @@ export async function getItemTargetPath(
     config.resolvedPaths[parent as keyof typeof config.resolvedPaths],
     type,
   )
-}
-
-async function fetchRegistry(paths: string[]): Promise<unknown[]> {
-  try {
-    const results = await Promise.all(
-      paths.map(async (path) => {
-        const response = await fetch(`${baseUrl}/${path}`)
-        return await response.json()
-      }),
-    )
-
-    return results
-  } catch (error) {
-    throw new Error(`Failed to fetch registry from ${baseUrl}.`)
-  }
 }
 
 async function fetchFromSource(paths: string[]): Promise<string[]> {
