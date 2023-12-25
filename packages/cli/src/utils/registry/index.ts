@@ -7,15 +7,15 @@ import {
   type RegistryItemWithContentSchema,
   RegistryWithContentSchema,
 } from '@/utils/registry/schema'
-import { type Input, SetInput, parse } from 'valibot'
+import { type Input, SetInput, parse, string } from 'valibot'
 
 const sourceUrl =
   'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/ui'
 
 export async function getMastercssConfig(): Promise<string> {
   try {
-    const [result] = await fetchFromSource(['master.css.ts'])
-    return result
+    const [result] = await fetchFromSource(['master.css.ts'], true)
+    return parse(string(), result)
   } catch {
     throw new Error('Failed to fetch master.css.ts from registry.')
   }
@@ -73,7 +73,7 @@ export async function fetchTree(
 ): Promise<Input<typeof RegistryWithContentSchema>> {
   try {
     const paths = tree.map((item) => item.files[0])
-    const result = await fetchFromSource(paths)
+    const result = await fetchFromSource(paths, true)
     const registryWithContent = tree.map((item, index) => ({
       ...item,
       files: [
@@ -110,12 +110,13 @@ export async function getItemTargetPath(
   )
 }
 
-async function fetchFromSource(paths: string[]): Promise<string[]> {
+async function fetchFromSource(paths: string[], text = false) {
   try {
     const results = await Promise.all(
       paths.map(async (path) => {
         const response = await fetch(`${sourceUrl}/${path}`)
-        return await response.text()
+        if (text) return await response.text()
+        return await response.json()
       }),
     )
 

@@ -62,7 +62,7 @@ export const init = new Command()
     }
   })
 
-export async function promptForConfig(
+async function promptForConfig(
   cwd: string,
   defaultConfig: Config | null = null,
   skip = false,
@@ -145,7 +145,7 @@ export async function promptForConfig(
   return await resolveConfigPaths(cwd, config)
 }
 
-export async function runInit(cwd: string, config: Config): Promise<void> {
+async function runInit(cwd: string, config: Config): Promise<void> {
   projectInitSpinner.message('Initializing project')
 
   // Ensure all resolved paths directories exist.

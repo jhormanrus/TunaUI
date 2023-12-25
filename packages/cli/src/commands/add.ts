@@ -1,6 +1,6 @@
 import { existsSync, promises as fs } from 'fs'
 import path from 'path'
-import { getConfig } from '@/utils/get-config'
+import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { logger } from '@/utils/logger'
 import {
@@ -10,10 +10,16 @@ import {
   getRegistryIndex,
   resolveTree,
 } from '@/utils/registry'
+import {
+  RegistryItemWithContentSchema,
+  RegistryWithContentSchema,
+} from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
 import color from 'picocolors'
-import { array, boolean, object, optional, parse, string } from 'valibot'
+import { Input, array, boolean, object, optional, parse, string } from 'valibot'
+
+const addComponentSpinner = p.spinner()
 
 const AddOptionsSchema = object({
   components: array(string()),
@@ -62,36 +68,7 @@ export const add = new Command()
         return
       }
 
-      const registryIndex = await getRegistryIndex()
-
-      let selectedComponents = options.all
-        ? registryIndex.map((entry) => entry.name)
-        : options.components
-
-      if (!(options.components?.length || options.all)) {
-        const components = await p.multiselect({
-          message: 'Which components would you like to add?',
-          options: registryIndex.map((entry) => ({
-            value: entry.name,
-            label: entry.name,
-          })),
-        })
-        if (p.isCancel(components)) {
-          p.cancel('Operation cancelled.')
-          process.exit(0)
-        }
-        selectedComponents = components as string[]
-      }
-
-      const tree = await resolveTree(registryIndex, selectedComponents)
-      const payload = await fetchTree(tree)
-      // const baseColor = await getRegistryBaseColor()
-      // console.log(baseColor)
-
-      if (!payload.length) {
-        logger.warn('Selected components not found. Exiting.')
-        process.exit(0)
-      }
+      const payload = await promptToSelectComponents(options)
 
       if (!options.yes) {
         const proceed = await p.confirm({
@@ -100,60 +77,103 @@ export const add = new Command()
         if (!proceed) process.exit(0)
       }
 
-      const spinner = p.spinner()
-      spinner.start('Installing components')
-      for (const item of payload) {
-        spinner.message(`Installing ${item.name}`)
-        const targetDir = await getItemTargetPath(
-          config,
-          item,
-          options.path ? path.resolve(cwd, options.path) : undefined,
-        )
-
-        if (!targetDir) {
-          continue
-        }
-
-        const existingComponent = item.files.filter((file) =>
-          existsSync(path.resolve(targetDir, file.name)),
-        )
-
-        if (existingComponent.length && !options.overwrite) {
-          if (selectedComponents.includes(item.name)) {
-            spinner.stop()
-            const overwrite = await p.confirm({
-              message: `Component ${item.name} already exists. Would you like to overwrite?`,
-              initialValue: false,
-            })
-
-            if (!overwrite) {
-              logger.info(
-                `Skipped ${item.name}. To overwrite, run with the ${color.green(
-                  '--overwrite',
-                )} flag.`,
-              )
-              continue
-            }
-
-            spinner.start(`Installing ${item.name}...`)
-          } else {
-            continue
-          }
-        }
-
-        for (const file of item.files) {
-          const filePath = path.resolve(targetDir, file.name)
-          await Bun.write(filePath, file.content)
-        }
-
-        // Install dependencies.
-        if (item.dependencies?.length) {
-          const proc = Bun.spawn(['bun', 'add', ...item.dependencies], { cwd })
-          await proc.exited
-        }
-      }
-      spinner.stop('Done.')
+      await runAdd(cwd, config, options, payload)
     } catch (error) {
       handleError(error)
     }
   })
+
+async function promptToSelectComponents(
+  options: Input<typeof AddOptionsSchema>,
+): Promise<Input<typeof RegistryWithContentSchema>> {
+  const registryIndex = await getRegistryIndex()
+
+  let selectedComponents = options.all
+    ? registryIndex.map((entry) => entry.name)
+    : options.components
+
+  if (!(options.components.length || options.all)) {
+    const components = await p.multiselect({
+      message: 'Which components would you like to add?',
+      options: registryIndex.map((entry) => ({
+        value: entry.name,
+        label: entry.name,
+      })),
+    })
+    if (p.isCancel(components)) {
+      p.cancel('Operation cancelled.')
+      process.exit(0)
+    }
+    selectedComponents = components as string[]
+  }
+
+  const tree = await resolveTree(registryIndex, selectedComponents)
+  const payload = await fetchTree(tree)
+  // const baseColor = await getRegistryBaseColor()
+  // console.log(baseColor)
+
+  if (!payload.length) {
+    logger.warn('Selected components not found. Exiting.')
+    process.exit(0)
+  }
+
+  return payload
+}
+
+async function runAdd(
+  cwd: string,
+  config: Config,
+  options: Input<typeof AddOptionsSchema>,
+  payload: Input<typeof RegistryWithContentSchema>,
+): Promise<void> {
+  addComponentSpinner.start('Installing components')
+
+  for (const item of payload) {
+    const targetDir = await getItemTargetPath(
+      config,
+      item,
+      options.path ? path.resolve(cwd, options.path) : undefined,
+    )
+
+    if (!targetDir) continue
+
+    const existingComponent = item.files.filter((file) =>
+      existsSync(path.resolve(targetDir, file.name)),
+    )
+
+    if (existingComponent.length && !options.overwrite) {
+      const overwrite = await promptForOverwrite(item)
+      if (!overwrite) continue
+    }
+
+    for (const file of item.files) {
+      const filePath = path.resolve(targetDir, file.name)
+      await Bun.write(filePath, file.content)
+    }
+
+    // Install dependencies.
+    if (item.dependencies?.length) {
+      const proc = Bun.spawn(['bun', 'add', ...item.dependencies], { cwd })
+      await proc.exited
+    }
+  }
+  addComponentSpinner.stop('Done.')
+}
+
+async function promptForOverwrite(
+  item: Input<typeof RegistryItemWithContentSchema>,
+) {
+  addComponentSpinner.stop(`Component ${item.name} already exists.`)
+
+  const overwrite = await p.confirm({
+    message: `Would you like to overwrite component ${item.name}?`,
+    initialValue: false,
+  })
+
+  addComponentSpinner.start(`Installing ${item.name}`)
+  if (!overwrite) {
+    addComponentSpinner.stop(`Skipped ${item.name}.`)
+  }
+
+  return overwrite
+}
