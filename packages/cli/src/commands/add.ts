@@ -1,12 +1,11 @@
-import { existsSync, promises as fs } from 'fs'
+import { existsSync } from 'fs'
 import path from 'path'
 import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
-import { logger } from '@/utils/logger'
+import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
 import {
   fetchTree,
   getItemTargetPath,
-  getRegistryBaseColor,
   getRegistryIndex,
   resolveTree,
 } from '@/utils/registry'
@@ -45,21 +44,20 @@ export const add = new Command()
   .option('-p, --path <path>', 'the path to add the component to.')
   .action(async (components, opts) => {
     try {
+      printIntro()
+
       const options = parse(AddOptionsSchema, {
         components,
         ...opts,
       })
-
       const cwd = path.resolve(options.cwd)
 
-      if (!existsSync(cwd)) {
-        logger.error(`The path ${cwd} does not exist. Please try again.`)
-        process.exit(1)
-      }
+      validateCwd(cwd)
 
       const config = await getConfig(cwd)
+
       if (!config) {
-        logger.warn(
+        p.cancel(
           `Configuration is missing. Please run ${color.green(
             'init',
           )} to create a components.json file.`,
@@ -74,10 +72,12 @@ export const add = new Command()
         const proceed = await p.confirm({
           message: 'Ready to install components and dependencies. Proceed?',
         })
-        if (!proceed) process.exit(0)
+        if (!proceed) onCancel()
       }
 
       await runAdd(cwd, config, options, payload)
+
+      p.outro(`${color.green('Success!')} Components installed.`)
     } catch (error) {
       handleError(error)
     }
@@ -100,20 +100,15 @@ async function promptToSelectComponents(
         label: entry.name,
       })),
     })
-    if (p.isCancel(components)) {
-      p.cancel('Operation cancelled.')
-      process.exit(0)
-    }
-    selectedComponents = components as string[]
+    if (p.isCancel(components)) onCancel()
+    selectedComponents = parse(array(string()), components)
   }
 
   const tree = await resolveTree(registryIndex, selectedComponents)
   const payload = await fetchTree(tree)
-  // const baseColor = await getRegistryBaseColor()
-  // console.log(baseColor)
 
   if (!payload.length) {
-    logger.warn('Selected components not found. Exiting.')
+    p.cancel('Selected components not found. Exiting.')
     process.exit(0)
   }
 
@@ -126,8 +121,6 @@ async function runAdd(
   options: Input<typeof AddOptionsSchema>,
   payload: Input<typeof RegistryWithContentSchema>,
 ): Promise<void> {
-  addComponentSpinner.start('Installing components')
-
   for (const item of payload) {
     const targetDir = await getItemTargetPath(
       config,
@@ -156,23 +149,22 @@ async function runAdd(
       const proc = Bun.spawn(['bun', 'add', ...item.dependencies], { cwd })
       await proc.exited
     }
+
+    addComponentSpinner.stop(`Installed component ${color.yellow(item.name)}.`)
   }
-  addComponentSpinner.stop('Done.')
 }
 
 async function promptForOverwrite(
   item: Input<typeof RegistryItemWithContentSchema>,
 ) {
-  addComponentSpinner.stop(`Component ${item.name} already exists.`)
-
   const overwrite = await p.confirm({
     message: `Would you like to overwrite component ${item.name}?`,
     initialValue: false,
   })
 
-  addComponentSpinner.start(`Installing ${item.name}`)
+  addComponentSpinner.start(`Installing component ${color.yellow(item.name)}`)
   if (!overwrite) {
-    addComponentSpinner.stop(`Skipped ${item.name}.`)
+    addComponentSpinner.stop(`Skipped component ${color.yellow(item.name)}.`)
   }
 
   return overwrite

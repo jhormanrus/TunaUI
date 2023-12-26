@@ -1,12 +1,4 @@
-import {
-  array,
-  merge,
-  object,
-  optional,
-  picklist,
-  record,
-  string,
-} from 'valibot'
+import { array, merge, object, optional, picklist, string } from 'valibot'
 
 export const RegistryItemSchema = object({
   name: string(),
@@ -35,16 +27,3 @@ export const RegistryItemWithContentSchema = merge([
 ])
 
 export const RegistryWithContentSchema = array(RegistryItemWithContentSchema)
-
-export const RegistryBaseColorSchema = object({
-  inlineColors: object({
-    light: record(string(), string()),
-    dark: record(string(), string()),
-  }),
-  cssVars: object({
-    light: record(string(), string()),
-    dark: record(string(), string()),
-  }),
-  inlineColorsTemplate: string(),
-  cssVarsTemplate: string(),
-})

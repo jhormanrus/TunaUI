@@ -1,4 +1,3 @@
-import { existsSync, promises as fs } from 'fs'
 import path from 'path'
 import {
   type Config,
@@ -11,9 +10,8 @@ import {
   resolveConfigPaths,
 } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
-import { logger } from '@/utils/logger'
+import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
 import { getMastercssConfig } from '@/utils/registry'
-// import { getRegistryBaseColor } from '@/utils/registry'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
 import color from 'picocolors'
@@ -39,24 +37,20 @@ export const init = new Command()
   )
   .action(async (opts) => {
     try {
+      printIntro()
+
       const options = parse(InitOptionsSchema, opts)
       const cwd = path.resolve(options.cwd)
 
-      // Ensure target directory exists.
-      if (!existsSync(cwd)) {
-        logger.error(`The path ${cwd} does not exist. Please try again.`)
-        process.exit(1)
-      }
+      validateCwd(cwd)
 
-      // Read config.
       const existingConfig = await getConfig(cwd)
       const config = await promptForConfig(cwd, existingConfig, options.yes)
 
       await runInit(cwd, config)
 
-      projectInitSpinner.stop(
-        `${color.green('Success!')} Project initialization completed.`,
-      )
+      projectInitSpinner.stop('Installed dependencies')
+      p.outro(`${color.green('Success!')} Initialization completed.`)
     } catch (error) {
       handleError(error)
     }
@@ -68,8 +62,6 @@ async function promptForConfig(
   skip = false,
 ): Promise<Config> {
   const highlight = (text: string): string => color.yellow(text)
-
-  p.intro(`${color.bgCyan(color.bold(color.black(' TunaUI ')))}`)
 
   const options = await p.group(
     {
@@ -107,12 +99,7 @@ async function promptForConfig(
           placeholder: defaultConfig?.aliases.utils ?? DEFAULT_UTILS,
         }),
     },
-    {
-      onCancel: () => {
-        p.cancel('Operation cancelled.')
-        process.exit(0)
-      },
-    },
+    { onCancel },
   )
 
   const config = parse(RawConfigSchema, {
@@ -134,13 +121,12 @@ async function promptForConfig(
         'components.json',
       )}. Proceed?`,
     })
-    if (!proceed) process.exit(0)
+    if (!proceed) onCancel()
   }
 
-  // Write to file.
-  projectInitSpinner.start(`Writing ${highlight('components.json')}...`)
+  projectInitSpinner.start(`Writing ${highlight('components.json')}`)
   const targetPath = path.resolve(cwd, 'components.json')
-  await Bun.write(targetPath, JSON.stringify(config, null, 2))
+  await Bun.write(targetPath, `${JSON.stringify(config, null, 2)}\n`)
 
   return await resolveConfigPaths(cwd, config)
 }
@@ -163,27 +149,11 @@ async function runInit(cwd: string, config: Config): Promise<void> {
       // Remove /utils at the end.
       dirname = dirname.replace(/\/utils$/, '')
     }
-
-    if (!existsSync(dirname)) {
-      await fs.mkdir(dirname, { recursive: true })
-    }
   }
 
-  // Write mastercss config.
   const mastercssConfig = await getMastercssConfig()
   await Bun.write(config.resolvedPaths.mastercssConfig, mastercssConfig)
 
-  // Write css file.
-  // const baseColor = await getRegistryBaseColor('slate')
-  // if (baseColor) {
-  //   await fs.writeFile(
-  //     config.resolvedPaths.globalCss,
-  //     baseColor.inlineColorsTemplate,
-  //     'utf8'
-  //   )
-  // }
-
-  // Install dependencies.
   projectInitSpinner.message('Installing dependencies')
   const proc = Bun.spawn(['bun', 'add', '--silent', ...PROJECT_DEPENDENCIES], {
     cwd,

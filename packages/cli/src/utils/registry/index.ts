@@ -1,7 +1,6 @@
 import path from 'path'
 import { type Config } from '@/utils/get-config'
 import {
-  RegistryBaseColorSchema,
   RegistryIndexSchema,
   RegistryItemSchema,
   type RegistryItemWithContentSchema,
@@ -29,18 +28,6 @@ export async function getRegistryIndex(): Promise<
     return parse(RegistryIndexSchema, result)
   } catch {
     throw new Error('Failed to fetch components from registry.')
-  }
-}
-
-export async function getRegistryBaseColor(): Promise<
-  Input<typeof RegistryBaseColorSchema>
-> {
-  try {
-    const [result] = await fetchFromSource(['master.css.ts'])
-
-    return parse(RegistryBaseColorSchema, result)
-  } catch {
-    throw new Error('Failed to fetch base color from registry.')
   }
 }
 
@@ -72,16 +59,14 @@ export async function fetchTree(
   tree: Input<typeof RegistryIndexSchema>,
 ): Promise<Input<typeof RegistryWithContentSchema>> {
   try {
-    const paths = tree.map((item) => item.files[0])
-    const result = await fetchFromSource(paths, true)
-    const registryWithContent = tree.map((item, index) => ({
+    const paths = tree.map((item) => item.files)
+    const result = await fetchFromSource(paths.flat(), true)
+    const registryWithContent = tree.map((item) => ({
       ...item,
-      files: [
-        {
-          name: item.files[0].split('/').pop(),
-          content: result[index],
-        },
-      ],
+      files: item.files.map((file, index) => ({
+        name: file.split('/').pop(),
+        content: result[index],
+      })),
     }))
     return parse(RegistryWithContentSchema, registryWithContent)
   } catch {
