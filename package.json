@@ -1,5 +1,5 @@
 {
-  "name": "tuna",
+  "name": "lidia-ui",
   "workspaces": ["packages/*"],
   "scripts": {
     "lint": "biome check ."

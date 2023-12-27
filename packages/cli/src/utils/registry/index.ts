@@ -9,7 +9,7 @@ import {
 import { type Input, SetInput, parse, string } from 'valibot'
 
 const sourceUrl =
-  'https://raw.githubusercontent.com/jhormanrus/TunaUI/main/packages/ui'
+  'https://raw.githubusercontent.com/jhormanrus/LidiaUI/main/packages/ui'
 
 export async function getMastercssConfig(): Promise<string> {
   try {

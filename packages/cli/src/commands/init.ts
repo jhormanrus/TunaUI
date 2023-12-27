@@ -103,7 +103,7 @@ async function promptForConfig(
   )
 
   const config = parse(RawConfigSchema, {
-    $schema: 'https://tuna-ui.vercel.app/schema.json',
+    $schema: 'https://lidia.vercel.app/schema.json',
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,

@@ -3,7 +3,7 @@ import * as p from '@clack/prompts'
 import color from 'picocolors'
 
 export function printIntro(): void {
-  p.intro(`${color.bgCyan(color.bold(color.black(' TunaUI ')))}`)
+  p.intro(`${color.bgMagenta(color.bold(color.black(' Lidia UI ')))}`)
 }
 
 export function onCancel(): void {

@@ -15,7 +15,7 @@ export default defineConfig({
     plugins: [HstSvelte(), HstVue()],
     setupFile: '/src/histoire-setup.ts',
     theme: {
-      title: 'Tuna UI',
+      title: 'Lidia UI',
     },
     tree: {
       groups: [
