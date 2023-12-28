@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { add } from '@/commands/add'
-// import { diff } from '@/commands/diff'
+import { diff } from '@/commands/diff'
 import { init } from '@/commands/init'
 import { Command } from 'commander'
 import packageJson from '../package.json'
@@ -14,8 +14,7 @@ async function main(): Promise<void> {
     .description('add components and dependencies to your project')
     .version(packageJson.version, '-v, --version', 'display the version number')
 
-  program.addCommand(init).addCommand(add)
-  // .addCommand(diff)
+  program.addCommand(init).addCommand(add).addCommand(diff)
 
   program.parse()
 }
