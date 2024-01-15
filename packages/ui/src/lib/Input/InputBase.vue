@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, withDefaults } from 'vue'
-import { label as cvLabel, input as cvInput } from '../class-variants/input'
+import { label as cvLabel, wrapper as cvWrapper, input as cvInput } from '../class-variants/input'
 
 const props = withDefaults(
   defineProps<{
@@ -31,17 +31,17 @@ const value = computed({
 </script>
 
 <template>
-  <div class="rel">
+  <label :class="cvWrapper({ size })">
     <span :class="cvLabel({ size })">
       {{ label }}
     </span>
     <input
       v-model="value"
+      :class="cvInput({ size })"
       :id="id"
       :type="type"
-      :placeholder="placeholder"
-      required
-      :class="cvInput({ size })"
+      :placeholder="placeholder || ''"
+      :required="required"
     />
-  </div>
+  </label>
 </template>
