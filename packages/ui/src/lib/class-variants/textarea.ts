@@ -12,7 +12,7 @@ export const label = cv(
 )
 
 export const wrapper = cv(
-  'block rel bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus outline:control-outline|solid|2:has(input:focus-visible) transition:background-color|150ms|ease-in',
+  'block rel bg:control-bg bg:control-hover-bg:hover bg:control-hover-bg:focus outline:control-outline|solid|2:has(textarea:focus-visible) transition:background-color|150ms|ease-in',
   {
     size: {
       sm: 'f:16 pb:5 pt:21 px:12 r:10',
@@ -23,5 +23,5 @@ export const wrapper = cv(
 )
 
 export const input = cv(
-  'w:full fg:transparent::placeholder fg:gray-60:not(:placeholder-shown)::placeholder fg:control-placeholder:focus::placeholder outline:none',
+  'w:full fg:transparent::placeholder fg:gray-60:not(:placeholder-shown)::placeholder fg:control-placeholder:focus::placeholder outline:none resize:none',
 )
