@@ -22,8 +22,7 @@
   ],
   "type": "module",
   "scripts": {
-    "start": "bun src/index.ts",
-    "lint": "eslint --ext .ts src"
+    "start": "bun src/index.ts"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
