@@ -1,5 +1,5 @@
-import { initRuntime } from '@master/css'
+import { initCSSRuntime } from '@master/css-runtime'
 import config from '../master.css'
 import './app.css'
 
-initRuntime(config)
+initCSSRuntime(config)
