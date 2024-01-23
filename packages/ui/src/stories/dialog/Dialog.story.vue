@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import DialogBase from '../../lib/Dialog/DialogBase.vue'
+import Dialog from '../../lib/dialog/Dialog.vue'
 
 const dialog = ref<InstanceType<typeof DialogBase>>()
 </script>
@@ -9,11 +9,11 @@ const dialog = ref<InstanceType<typeof DialogBase>>()
   <Story>
     <Variant title="primary">
       <button @click="dialog?.open">open</button>
-      <DialogBase ref="dialog">
+      <Dialog ref="dialog">
         <div class="bg:white p:20">
           <button @click="dialog?.close">close</button>
         </div>
-      </DialogBase>
+      </Dialog>
     </Variant>
   </Story>
 </template>

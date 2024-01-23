@@ -1,7 +1,17 @@
 [
   {
     "name": "button",
-    "files": ["src/lib/Button/BaseButton.vue"],
+    "files": [
+      "src/lib/button/Button.vue"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "input",
+    "files": [
+      "src/lib/input/Input.vue",
+      "src/lib/class-variants/input.ts"
+    ],
     "type": "components:ui"
   }
 ]

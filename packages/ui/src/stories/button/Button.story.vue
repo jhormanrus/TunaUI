@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ButtonBase from '../../lib/Button/ButtonBase.vue'
+import Button from '../../lib/button/Button.vue'
 
 const text = ref('Click me')
 </script>
 
 <template>
   <Story>
-    <ButtonBase>{{ text }}</ButtonBase>
-
+    <Button>{{ text }}</Button>
     <template #controls>
       <HstText title="default slot" v-model="text" />
     </template>
