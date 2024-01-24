@@ -1,18 +1,18 @@
-import { existsSync, promises as fs } from 'fs'
+import { existsSync } from 'fs'
 import path from 'path'
 import { Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
-import { validateCwd } from '@/utils/prompt'
+import { printIntro, validateCwd } from '@/utils/prompt'
 import {
   fetchTree,
   getItemTargetPath,
   getRegistryIndex,
+  sourceUrl,
 } from '@/utils/registry'
 import { RegistryIndexSchema } from '@/utils/registry/schema'
-import { transform } from '@/utils/transformers'
 import * as p from '@clack/prompts'
+import { $ } from 'bun'
 import { Command } from 'commander'
-import { type Change, diffLines } from 'diff'
 import color from 'picocolors'
 import { Input, boolean, object, optional, parse, string } from 'valibot'
 
@@ -35,6 +35,8 @@ export const diff = new Command()
   )
   .action(async (name, opts) => {
     try {
+      printIntro()
+
       const options = parse(UpdateOptionsSchema, {
         component: name,
         ...opts,
@@ -57,48 +59,7 @@ export const diff = new Command()
 
       const registryIndex = await getRegistryIndex()
 
-      if (!options.component) {
-        const targetDir = config.resolvedPaths.components
-
-        // Find all components that exist in the project.
-        const projectComponents = registryIndex.filter((item) => {
-          for (const file of item.files) {
-            const filePath = path.resolve(targetDir, file)
-            if (existsSync(filePath)) {
-              return true
-            }
-          }
-
-          return false
-        })
-
-        // Check for updates.
-        const componentsWithUpdates = []
-        for (const component of projectComponents) {
-          const changes = await diffComponent(component, config)
-          if (changes.length) {
-            componentsWithUpdates.push({
-              name: component.name,
-              changes,
-            })
-          }
-        }
-
-        if (!componentsWithUpdates.length) {
-          p.outro('No updates found.')
-          process.exit(0)
-        }
-
-        p.outro('The following components have updates available:')
-        for (const component of componentsWithUpdates) {
-          p.outro(`- ${component.name}`)
-          for (const change of component.changes) {
-            p.outro(`  - ${change.filePath}`)
-          }
-        }
-        p.outro(`Run ${color.green('diff <component>')} to see the changes.`)
-        process.exit(0)
-      }
+      if (!options.component) await diffAll(config, registryIndex)
 
       // Show diff for a single component.
       const component = registryIndex.find(
@@ -110,29 +71,78 @@ export const diff = new Command()
           `The component ${color.green(options.component)} does not exist.`,
         )
         process.exit(1)
+        return
       }
 
       const changes = await diffComponent(component, config)
 
       if (!changes.length) {
-        p.outro(`No updates found for ${options.component}.`)
+        p.outro(`No updates found for ${color.green(options.component)}.`)
         process.exit(0)
       }
 
       for (const change of changes) {
-        p.outro(`- ${change.filePath}`)
-        await printDiff(change.patch)
+        p.note(change.patch, change.filePath)
       }
+
+      p.outro('Done.')
     } catch (error) {
       handleError(error)
     }
   })
 
+async function diffAll(
+  config: Config,
+  registryIndex: Input<typeof RegistryIndexSchema>,
+) {
+  const targetDir = config.resolvedPaths.components
+
+  // Find all components that exist in the project
+  const projectComponents = registryIndex.filter((item) => {
+    for (const file of item.files) {
+      const filePath = path.resolve(targetDir, file)
+      console.log(targetDir, file)
+      if (existsSync(filePath)) {
+        return true
+      }
+    }
+
+    return false
+  })
+
+  // Check for updates
+  const componentsWithUpdates = []
+  for (const component of projectComponents) {
+    const changes = await diffComponent(component, config)
+    if (changes.length) {
+      componentsWithUpdates.push({
+        name: component.name,
+        changes,
+      })
+    }
+  }
+
+  if (!componentsWithUpdates.length) {
+    p.outro('No updates found.')
+    process.exit(0)
+  }
+
+  p.outro('The following components have updates available:')
+  for (const component of componentsWithUpdates) {
+    p.outro(`- ${component.name}`)
+    for (const change of component.changes) {
+      p.outro(`  - ${change.filePath}`)
+    }
+  }
+  p.outro(`Run ${color.green('diff <component>')} to see the changes.`)
+  process.exit(0)
+}
+
 async function diffComponent(
   component: Input<typeof RegistryIndexSchema>[number],
   config: Config,
 ) {
-  const payload = await fetchTree(config.style, [component])
+  const payload = await fetchTree([component])
 
   const changes = []
 
@@ -143,46 +153,26 @@ async function diffComponent(
       continue
     }
 
-    for (const file of item.files) {
+    for (let i = 0; i < item.files.length; i++) {
+      const file = item.files[i]
       const filePath = path.resolve(targetDir, file.name)
 
       if (!existsSync(filePath)) {
         continue
       }
 
-      const fileContent = await fs.readFile(filePath, 'utf8')
+      const output =
+        await $`curl -s -L ${sourceUrl}/${component.files[i]} | git -P diff --no-index -- ${filePath} - | tail -n +5`.text()
 
-      const registryContent = await transform({
-        filename: file.name,
-        raw: file.content,
-        config,
-      })
-
-      const patch = diffLines(registryContent as string, fileContent)
-      if (patch.length > 1) {
+      if (output) {
         changes.push({
           file: file.name,
           filePath,
-          patch,
+          patch: output,
         })
       }
     }
   }
 
   return changes
-}
-
-async function printDiff(diff: Change[]) {
-  for (const part of diff) {
-    if (part) {
-      if (part.added) {
-        return process.stdout.write(color.green(part.value))
-      }
-      if (part.removed) {
-        return process.stdout.write(color.red(part.value))
-      }
-
-      return process.stdout.write(part.value)
-    }
-  }
 }

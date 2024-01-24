@@ -138,7 +138,9 @@ async function runAdd(
       const overwrite = await promptForOverwrite(item)
       if (!overwrite) continue
     } else {
-      addComponentSpinner.start(`Installing component ${color.yellow(item.name)}`)
+      addComponentSpinner.start(
+        `Installing component ${color.yellow(item.name)}`,
+      )
     }
 
     for (const file of item.files) {

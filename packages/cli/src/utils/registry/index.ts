@@ -8,7 +8,7 @@ import {
 } from '@/utils/registry/schema'
 import { type Input, SetInput, parse, string } from 'valibot'
 
-const sourceUrl =
+export const sourceUrl =
   'https://raw.githubusercontent.com/jhormanrus/LidiaUI/main/packages/ui'
 
 export async function getMastercssConfig(): Promise<string> {
