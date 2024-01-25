@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, withDefaults } from 'vue'
-import { label as cvLabel, wrapper as cvWrapper, input as cvInput } from '../class-variants/textarea'
+import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../class-variants/textarea'
 
 export type TextAreaValue = string | number | readonly string[] | undefined | null
 
@@ -16,7 +16,8 @@ const props = withDefaults(
   }>(),
   {
     rows: 3,
-    size: 'md'
+    size: 'md',
+    placeholder: '',
   }
 )
 
@@ -34,17 +35,18 @@ const value = computed({
 
 <template>
   <label :class="cvWrapper({ size })">
-    <span :class="cvLabel({ size })">
-      {{ label }}
-    </span>
-    <textarea
-      v-model="value"
-      :class="cvInput({ size })"
-      :id="id"
-      :placeholder="placeholder || ''"
-      :rows="rows"
-      :required="required"
-    ></textarea>
-    <!-- class="w-full text-lg bg-stone-200/40 outline-stone-500 rounded-2xl px-6 pt-8 pb-3 transition-colors resize-none" -->
+    <div :class="cvInputWrapper({ size })">
+      <span :class="cvLabel({ size })">
+        {{ label }}
+      </span>
+      <textarea
+        v-model="value"
+        :class="cvInput({ size })"
+        :id="id"
+        :placeholder="placeholder"
+        :rows="rows"
+        :required="required"
+      ></textarea>
+    </div>
   </label>
 </template>
