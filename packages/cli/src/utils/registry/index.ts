@@ -1,9 +1,6 @@
-import path from 'path'
-import { type Config } from '@/utils/get-config'
 import {
   RegistryIndexSchema,
   RegistryItemSchema,
-  type RegistryItemWithContentSchema,
   RegistryWithContentSchema,
 } from '@/utils/registry/schema'
 import { type Input, SetInput, parse, string } from 'valibot'

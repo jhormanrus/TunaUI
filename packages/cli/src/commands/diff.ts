@@ -3,12 +3,7 @@ import path from 'path'
 import { Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { printIntro, validateCwd } from '@/utils/prompt'
-import {
-  fetchTree,
-  getItemTargetPath,
-  getRegistryIndex,
-  sourceUrl,
-} from '@/utils/registry'
+import { fetchTree, getRegistryIndex, sourceUrl } from '@/utils/registry'
 import { RegistryIndexSchema } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { $ } from 'bun'
@@ -147,15 +142,9 @@ async function diffComponent(
   const changes = []
 
   for (const item of payload) {
-    const targetDir = await getItemTargetPath(config, item)
-
-    if (!targetDir) {
-      continue
-    }
-
     for (let i = 0; i < item.files.length; i++) {
       const file = item.files[i]
-      const filePath = path.resolve(targetDir, file.name)
+      const filePath = path.resolve(config.resolvedPaths[file.type], file.name)
 
       if (!existsSync(filePath)) {
         continue
