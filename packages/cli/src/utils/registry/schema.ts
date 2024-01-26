@@ -5,11 +5,6 @@ export const RegistryItemSchema = object({
   dependencies: optional(array(string())),
   registryDependencies: optional(array(string())),
   files: array(string()),
-  type: picklist([
-    'components:ui',
-    'components:component',
-    'components:example',
-  ]),
 })
 
 export const RegistryIndexSchema = array(RegistryItemSchema)
@@ -20,6 +15,7 @@ export const RegistryItemWithContentSchema = merge([
     files: array(
       object({
         name: string(),
+        type: picklist(['classVariants', 'components', 'utils']),
         content: string(),
       }),
     ),

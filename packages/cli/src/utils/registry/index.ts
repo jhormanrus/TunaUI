@@ -61,10 +61,16 @@ export async function fetchTree(
   try {
     const paths = tree.map((item) => item.files)
     const result = await fetchFromSource(paths.flat(), true)
+    enum FileType {
+      'class-variants' = 'classVariants',
+      components = 'components',
+      utils = 'utils',
+    }
     const registryWithContent = tree.map((item) => ({
       ...item,
       files: item.files.map((file, index) => ({
         name: file.split('/').pop(),
+        type: FileType[file.split('/').reverse()[1] as keyof typeof FileType],
         content: result[index],
       })),
     }))
@@ -72,27 +78,6 @@ export async function fetchTree(
   } catch {
     throw new Error('Failed to fetch tree from registry.')
   }
-}
-
-export async function getItemTargetPath(
-  config: Config,
-  item: Pick<Input<typeof RegistryItemWithContentSchema>, 'type'>,
-  override?: string,
-): Promise<string | null> {
-  // Allow overrides for all items but ui.
-  if (override && item.type !== 'components:ui') {
-    return override
-  }
-
-  const [parent, type] = item.type.split(':')
-  if (!(parent in config.resolvedPaths)) {
-    return null
-  }
-
-  return path.join(
-    config.resolvedPaths[parent as keyof typeof config.resolvedPaths],
-    type,
-  )
 }
 
 async function fetchFromSource(paths: string[], text = false) {

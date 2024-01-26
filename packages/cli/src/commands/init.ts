@@ -1,6 +1,7 @@
 import path from 'path'
 import {
   type Config,
+  DEFAULT_CLASS_VARIANTS,
   DEFAULT_COMPONENTS,
   DEFAULT_GLOBAL_CSS,
   DEFAULT_MASTERCSS_CONFIG,
@@ -86,6 +87,16 @@ async function promptForConfig(
           placeholder:
             defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG,
         }),
+      classVariants: async () =>
+        await p.text({
+          message: `Configure the import alias for ${highlight(
+            'class-variants',
+          )}:`,
+          defaultValue:
+            defaultConfig?.aliases.classVariants ?? DEFAULT_CLASS_VARIANTS,
+          placeholder:
+            defaultConfig?.aliases.classVariants ?? DEFAULT_CLASS_VARIANTS,
+        }),
       components: async () =>
         await p.text({
           message: `Configure the import alias for ${highlight('components')}:`,
@@ -103,15 +114,16 @@ async function promptForConfig(
   )
 
   const config = parse(RawConfigSchema, {
-    $schema: 'https://lidia.vercel.app/schema.json',
+    $schema: 'https://lidia-ui.vercel.app/schema.json',
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,
     },
     typescript: options.typescript,
     aliases: {
-      utils: options.utils,
+      classVariants: options.classVariants,
       components: options.components,
+      utils: options.utils,
     },
   })
 

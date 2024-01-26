@@ -3,12 +3,7 @@ import path from 'path'
 import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
-import {
-  fetchTree,
-  getItemTargetPath,
-  getRegistryIndex,
-  resolveTree,
-} from '@/utils/registry'
+import { fetchTree, getRegistryIndex, resolveTree } from '@/utils/registry'
 import {
   RegistryItemWithContentSchema,
   RegistryWithContentSchema,
@@ -122,16 +117,8 @@ async function runAdd(
   payload: Input<typeof RegistryWithContentSchema>,
 ): Promise<void> {
   for (const item of payload) {
-    const targetDir = await getItemTargetPath(
-      config,
-      item,
-      options.path ? path.resolve(cwd, options.path) : undefined,
-    )
-
-    if (!targetDir) continue
-
     const existingComponent = item.files.filter((file) =>
-      existsSync(path.resolve(targetDir, file.name)),
+      existsSync(path.resolve(config.resolvedPaths[file.type], file.name)),
     )
 
     if (existingComponent.length && !options.overwrite) {
@@ -144,7 +131,7 @@ async function runAdd(
     }
 
     for (const file of item.files) {
-      const filePath = path.resolve(targetDir, file.name)
+      const filePath = path.resolve(config.resolvedPaths[file.type], file.name)
       await Bun.write(filePath, file.content)
     }
 

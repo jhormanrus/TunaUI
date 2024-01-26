@@ -1,12 +1,10 @@
 [
   {
     "name": "button",
-    "files": ["src/lib/button/Button.vue"],
-    "type": "components:ui"
+    "files": ["src/lib/button/Button.vue", "src/lib/class-variants/button.ts"]
   },
   {
     "name": "input",
-    "files": ["src/lib/input/Input.vue", "src/lib/class-variants/input.ts"],
-    "type": "components:ui"
+    "files": ["src/lib/input/Input.vue", "src/lib/class-variants/input.ts"]
   }
 ]
