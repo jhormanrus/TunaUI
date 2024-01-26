@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Input from '../../lib/input/Input.vue'
+import Input from '../../components/input/Input.vue'
 
 const value = ref()
 const placeholder = ref()

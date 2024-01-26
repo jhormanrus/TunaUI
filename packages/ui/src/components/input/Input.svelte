@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../class-variants/input'
+  import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../../class-variants/input'
 
   export let value: unknown = null
   export let id: string | null = null

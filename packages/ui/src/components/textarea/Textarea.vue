@@ -1,25 +1,27 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts">
 import { computed, withDefaults } from 'vue'
-import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../class-variants/input'
+import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../../class-variants/textarea'
+
+export type TextAreaValue = string | number | readonly string[] | undefined | null
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: T
+    modelValue?: TextAreaValue
     id?: string
-    type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
+    rows?: number
     size?: 'sm' | 'lg' | 'md'
     label?: string
     placeholder?: string
     required?: boolean
   }>(),
   {
-    type: 'text',
+    rows: 3,
     size: 'md',
     placeholder: '',
   }
 )
 
-const emit = defineEmits<(e: 'update:modelValue', value?: T) => void>()
+const emit = defineEmits<(e: 'update:modelValue', value?: TextAreaValue) => void>()
 
 const value = computed({
   get () {
@@ -33,20 +35,18 @@ const value = computed({
 
 <template>
   <label :class="cvWrapper({ size })">
-    <slot name="left-aside"></slot>
     <div :class="cvInputWrapper({ size })">
       <span :class="cvLabel({ size })">
         {{ label }}
       </span>
-      <input
+      <textarea
         v-model="value"
         :class="cvInput({ size })"
         :id="id"
-        :type="type"
         :placeholder="placeholder"
+        :rows="rows"
         :required="required"
-      />
+      ></textarea>
     </div>
-    <slot name="right-aside"></slot>
   </label>
 </template>

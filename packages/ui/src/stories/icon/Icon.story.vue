@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import IconAt from '../../lib/icon/IconAt.vue'
-import IconCalendar from '../../lib/icon/IconCalendar.vue'
-import IconCheck from '../../lib/icon/IconCheck.vue'
-import IconInfoCircle from '../../lib/icon/IconInfoCircle.vue'
-import IconMoodHappy from '../../lib/icon/IconMoodHappy.vue'
-import IconSearch from '../../lib/icon/IconSearch.vue'
-import IconSelector from '../../lib/icon/IconSelector.vue'
-import IconX from '../../lib/icon/IconX.vue'
+import IconAt from '../../components/icon/IconAt.vue'
+import IconCalendar from '../../components/icon/IconCalendar.vue'
+import IconCheck from '../../components/icon/IconCheck.vue'
+import IconInfoCircle from '../../components/icon/IconInfoCircle.vue'
+import IconMoodHappy from '../../components/icon/IconMoodHappy.vue'
+import IconSearch from '../../components/icon/IconSearch.vue'
+import IconSelector from '../../components/icon/IconSelector.vue'
+import IconX from '../../components/icon/IconX.vue'
 
 const width = ref()
 const height = ref()

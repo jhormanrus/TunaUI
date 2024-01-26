@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Dialog from '../../lib/dialog/Dialog.vue'
+import Dialog from '../../components/dialog/Dialog.vue'
 
-const dialog = ref<InstanceType<typeof DialogBase>>()
+const dialog = ref<InstanceType<typeof Dialog>>()
 </script>
 
 <template>

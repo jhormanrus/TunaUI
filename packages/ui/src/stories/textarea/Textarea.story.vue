@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Textarea from '../../lib/textarea/Textarea.vue'
+import Textarea from '../../components/textarea/Textarea.vue'
 
 const value = ref()
 const placeholder = ref()
