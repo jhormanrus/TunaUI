@@ -1,7 +1,6 @@
 import path from 'path'
 import {
   type Config,
-  DEFAULT_CLASS_VARIANTS,
   DEFAULT_COMPONENTS,
   DEFAULT_GLOBAL_CSS,
   DEFAULT_MASTERCSS_CONFIG,
@@ -87,16 +86,6 @@ async function promptForConfig(
           placeholder:
             defaultConfig?.mastercss.config ?? DEFAULT_MASTERCSS_CONFIG,
         }),
-      classVariants: async () =>
-        await p.text({
-          message: `Configure the import alias for ${highlight(
-            'class-variants',
-          )}:`,
-          defaultValue:
-            defaultConfig?.aliases.classVariants ?? DEFAULT_CLASS_VARIANTS,
-          placeholder:
-            defaultConfig?.aliases.classVariants ?? DEFAULT_CLASS_VARIANTS,
-        }),
       components: async () =>
         await p.text({
           message: `Configure the import alias for ${highlight('components')}:`,
@@ -121,7 +110,6 @@ async function promptForConfig(
     },
     typescript: options.typescript,
     aliases: {
-      classVariants: options.classVariants,
       components: options.components,
       utils: options.utils,
     },

@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, withDefaults } from 'vue'
-import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../../class-variants/input'
+import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './input'
 
 const props = withDefaults(
   defineProps<{

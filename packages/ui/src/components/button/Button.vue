@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cvWrapper } from '../../class-variants/button'
+import { cvWrapper } from './button'
 </script>
 
 <template>

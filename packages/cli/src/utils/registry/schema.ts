@@ -15,7 +15,7 @@ export const RegistryItemWithContentSchema = merge([
     files: array(
       object({
         name: string(),
-        type: picklist(['classVariants', 'components', 'utils']),
+        type: picklist(['components', 'utils']),
         content: string(),
       }),
     ),

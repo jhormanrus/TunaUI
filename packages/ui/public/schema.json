@@ -20,9 +20,6 @@
     "aliases": {
       "type": "object",
       "properties": {
-        "classVariant": {
-          "type": "string"
-        },
         "components": {
           "type": "string"
         },
@@ -30,7 +27,7 @@
           "type": "string"
         }
       },
-      "required": ["classVariant", "components", "utils"]
+      "required": ["components", "utils"]
     }
   },
   "required": ["globalCss", "mastercss", "aliases"]

@@ -15,7 +15,6 @@ import {
   string,
 } from 'valibot'
 
-export const DEFAULT_CLASS_VARIANTS = '@/class-variants'
 export const DEFAULT_COMPONENTS = '@/components'
 export const DEFAULT_UTILS = '@/utils'
 export const DEFAULT_GLOBAL_CSS = 'src/app.css'
@@ -34,7 +33,6 @@ export const RawConfigSchema = object(
       config: string(),
     }),
     aliases: object({
-      classVariants: string(),
       components: string(),
       utils: string(),
     }),
@@ -50,7 +48,6 @@ export const ConfigSchema = merge([
     resolvedPaths: object({
       mastercssConfig: string(),
       globalCss: string(),
-      classVariants: string(),
       components: string(),
       utils: string(),
     }),
@@ -87,10 +84,6 @@ export async function resolveConfigPaths(
     resolvedPaths: {
       mastercssConfig: path.resolve(cwd, config.mastercss.config),
       globalCss: path.resolve(cwd, config.globalCss),
-      classVariants: await resolveImport(
-        config.aliases.classVariants,
-        tsConfig,
-      ),
       components: await resolveImport(config.aliases.components, tsConfig),
       utils: await resolveImport(config.aliases.utils, tsConfig),
     },

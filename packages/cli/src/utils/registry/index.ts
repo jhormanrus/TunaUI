@@ -59,7 +59,6 @@ export async function fetchTree(
     const paths = tree.map((item) => item.files)
     const result = await fetchFromSource(paths.flat(), true)
     enum FileType {
-      'class-variants' = 'classVariants',
       components = 'components',
       utils = 'utils',
     }
@@ -67,7 +66,7 @@ export async function fetchTree(
       ...item,
       files: item.files.map((file, index) => ({
         name: file.split('/').pop(),
-        type: FileType[file.split('/').reverse()[1] as keyof typeof FileType],
+        type: FileType[file.split('/')[1] as keyof typeof FileType],
         content: result[index],
       })),
     }))

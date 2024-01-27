@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, withDefaults } from 'vue'
-import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from '../../class-variants/textarea'
+import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './textarea'
 
 export type TextAreaValue = string | number | readonly string[] | undefined | null
 
