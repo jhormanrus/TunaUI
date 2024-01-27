@@ -58,15 +58,11 @@ export async function fetchTree(
   try {
     const paths = tree.map((item) => item.files)
     const result = await fetchFromSource(paths.flat(), true)
-    enum FileType {
-      components = 'components',
-      utils = 'utils',
-    }
     const registryWithContent = tree.map((item) => ({
       ...item,
       files: item.files.map((file, index) => ({
-        name: file.split('/').pop(),
-        type: FileType[file.split('/')[1] as keyof typeof FileType],
+        name: file.split('/').slice(2).join('/'),
+        type: file.split('/')[1],
         content: result[index],
       })),
     }))

@@ -49,7 +49,6 @@ export const diff = new Command()
           )} to create a components.json file.`,
         )
         process.exit(1)
-        return
       }
 
       const registryIndex = await getRegistryIndex()
@@ -63,16 +62,15 @@ export const diff = new Command()
 
       if (!component) {
         p.cancel(
-          `The component ${color.green(options.component)} does not exist.`,
+          `The component ${color.yellow(options.component)} does not exist.`,
         )
         process.exit(1)
-        return
       }
 
       const changes = await diffComponent(component, config)
 
       if (!changes.length) {
-        p.outro(`No updates found for ${color.green(options.component)}.`)
+        p.outro(`No updates found for ${color.yellow(options.component)}.`)
         process.exit(0)
       }
 
@@ -95,13 +93,12 @@ async function diffAll(
   // Find all components that exist in the project
   const projectComponents = registryIndex.filter((item) => {
     for (const file of item.files) {
-      const filePath = path.resolve(targetDir, file)
-      console.log(targetDir, file)
+      const fileName = file.split('/').slice(2).join('/')
+      const filePath = path.resolve(targetDir, fileName)
       if (existsSync(filePath)) {
         return true
       }
     }
-
     return false
   })
 
@@ -122,13 +119,13 @@ async function diffAll(
     process.exit(0)
   }
 
-  p.outro('The following components have updates available:')
-  for (const component of componentsWithUpdates) {
-    p.outro(`- ${component.name}`)
-    for (const change of component.changes) {
-      p.outro(`  - ${change.filePath}`)
-    }
-  }
+  const filePaths = componentsWithUpdates.map((component, i) => {
+    const componentName = color.yellow(component.name)
+    const filesPath = component.changes.map((change) => change.filePath).join('\n')
+    return `${componentName}\n${filesPath}`
+  }).join('\n\n')
+
+  p.note(filePaths, 'The following components have updates available:')
   p.outro(`Run ${color.green('diff <component>')} to see the changes.`)
   process.exit(0)
 }

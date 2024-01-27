@@ -58,7 +58,6 @@ export const add = new Command()
           )} to create a components.json file.`,
         )
         process.exit(1)
-        return
       }
 
       const payload = await promptToSelectComponents(options)
