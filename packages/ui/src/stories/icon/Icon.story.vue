@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import IconAdjustments from '../../components/icon/IconAdjustments.vue'
+import IconAdjustmentsHorizontal from '../../components/icon/IconAdjustmentsHorizontal.vue'
+import IconAlertCircle from '../../components/icon/IconAlertCircle.vue'
+import IconArchive from '../../components/icon/IconArchive.vue'
+import IconAssembly from '../../components/icon/IconAssembly.vue'
+import IconBackspace from '../../components/icon/IconBackspace.vue'
+import IconBell from '../../components/icon/IconBell.vue'
+import IconBellRinging from '../../components/icon/IconBellRinging.vue'
+import IconBookmark from '../../components/icon/IconBookmark.vue'
+import IconBookmarks from '../../components/icon/IconBookmarks.vue'
+import IconBoxMultiple from '../../components/icon/IconBoxMultiple.vue'
+import IconCaretDown from '../../components/icon/IconCaretDown.vue'
 import IconAt from '../../components/icon/IconAt.vue'
 import IconCalendar from '../../components/icon/IconCalendar.vue'
 import IconCheck from '../../components/icon/IconCheck.vue'
@@ -15,6 +27,42 @@ const height = ref()
 
 <template>
   <Story :layout="{ type: 'grid', width: 100 }">
+    <Variant title="adjustments">
+      <IconAdjustments :width="width" :height="height" />
+    </Variant>
+    <Variant title="adjustments-horizontal">
+      <IconAdjustmentsHorizontal :width="width" :height="height" />
+    </Variant>
+    <Variant title="alert-circle">
+      <IconAlertCircle :width="width" :height="height" />
+    </Variant>
+    <Variant title="archive">
+      <IconArchive :width="width" :height="height" />
+    </Variant>
+    <Variant title="assembly">
+      <IconAssembly :width="width" :height="height" />
+    </Variant>
+    <Variant title="backspace">
+      <IconBackspace :width="width" :height="height" />
+    </Variant>
+    <Variant title="bell">
+      <IconBell :width="width" :height="height" />
+    </Variant>
+    <Variant title="bell-ringing">
+      <IconBellRinging :width="width" :height="height" />
+    </Variant>
+    <Variant title="bookmark">
+      <IconBookmark :width="width" :height="height" />
+    </Variant>
+    <Variant title="bookmarks">
+      <IconBookmarks :width="width" :height="height" />
+    </Variant>
+    <Variant title="box-multiple">
+      <IconBoxMultiple :width="width" :height="height" />
+    </Variant>
+    <Variant title="caret-down">
+      <IconCaretDown :width="width" :height="height" />
+    </Variant>
     <Variant title="at">
       <IconAt :width="width" :height="height" />
     </Variant>
