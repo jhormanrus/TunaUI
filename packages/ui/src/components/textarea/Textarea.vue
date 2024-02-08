@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { computed, withDefaults } from 'vue'
+import { withDefaults } from 'vue'
 import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './textarea'
 
 export type TextAreaValue = string | number | readonly string[] | undefined | null
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue?: TextAreaValue
     id?: string
     rows?: number
     size?: 'sm' | 'lg' | 'md'
@@ -21,16 +20,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<(e: 'update:modelValue', value?: TextAreaValue) => void>()
-
-const value = computed({
-  get () {
-    return props.modelValue
-  },
-  set (value) {
-    emit('update:modelValue', value)
-  }
-})
+const value = defineModel<TextAreaValue>()
 </script>
 
 <template>

@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@histoire/plugin-svelte": "^0.17.9",
-    "@histoire/plugin-vue": "^0.17.9",
+    "@histoire/plugin-vue": "^0.17.11",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@tsconfig/svelte": "^5.0.2",
     "@vitejs/plugin-vue": "^5.0.3",

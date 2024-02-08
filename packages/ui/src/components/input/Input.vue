@@ -1,10 +1,9 @@
 <script setup lang="ts" generic="T">
-import { computed, withDefaults } from 'vue'
+import { withDefaults } from 'vue'
 import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './input'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue?: T
     id?: string
     type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
     size?: 'sm' | 'lg' | 'md'
@@ -19,16 +18,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<(e: 'update:modelValue', value?: T) => void>()
-
-const value = computed({
-  get () {
-    return props.modelValue
-  },
-  set (value) {
-    emit('update:modelValue', value)
-  }
-})
+const value = defineModel<T>()
 </script>
 
 <template>
