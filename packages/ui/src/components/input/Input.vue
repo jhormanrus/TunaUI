@@ -10,6 +10,7 @@ withDefaults(
     label?: string
     placeholder?: string
     required?: boolean
+    popovertarget?: string
   }>(),
   {
     type: 'text',
@@ -18,11 +19,15 @@ withDefaults(
   }
 )
 
+const emit = defineEmits<{
+  click: [e: MouseEvent]
+}>()
+
 const value = defineModel<T>()
 </script>
 
 <template>
-  <label :class="cvWrapper({ size })">
+  <label :class="cvWrapper({ size })" id="menu-label">
     <slot name="left-aside"></slot>
     <div :class="cvInputWrapper({ size })">
       <span :class="cvLabel({ size })">
@@ -35,6 +40,8 @@ const value = defineModel<T>()
         :type="type"
         :placeholder="placeholder"
         :required="required"
+        :popovertarget="popovertarget"
+        @click="emit('click', $event)"
       />
     </div>
     <slot name="right-aside"></slot>
