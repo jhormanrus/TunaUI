@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Input from '../../components/input/Input.vue'
+import Select from '../../components/select/Select.vue'
 
 const value = ref()
 const placeholder = ref()
-
-function showPopover(e: MouseEvent) {
-  e.target?.popoverTargetElement.showPopover()
-}
 </script>
 
 <template>
@@ -21,10 +18,8 @@ function showPopover(e: MouseEvent) {
     </Variant>
 
     <Variant title="secondary">
-      <div>
-        <Input v-model="value" id="menu-button" popovertarget="dropdown-menu" @click="showPopover" label="Label" required :placeholder="placeholder" />
-        <div id="dropdown-menu" popover anchor="menu-label" class="bg:cyan-50">popover</div>
-      </div>
+      <!-- <Input v-model="value" label="Label" required :placeholder="placeholder" /> -->
+      <Select />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -40,11 +35,3 @@ function showPopover(e: MouseEvent) {
     </Variant>
   </Story>
 </template>
-
-<style scoped>
-  #dropdown-menu {
-    top: calc(anchor(auto) + 8px);
-    bottom: auto;
-    left: anchor(left);
-  }
-</style>

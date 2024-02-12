@@ -5,6 +5,7 @@ import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './input'
 withDefaults(
   defineProps<{
     id?: string
+    idLabel?: string
     type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
     size?: 'sm' | 'lg' | 'md'
     label?: string
@@ -27,7 +28,7 @@ const value = defineModel<T>()
 </script>
 
 <template>
-  <label :class="cvWrapper({ size })" id="menu-label">
+  <label :class="cvWrapper({ size })" :id="idLabel">
     <slot name="left-aside"></slot>
     <div :class="cvInputWrapper({ size })">
       <span :class="cvLabel({ size })">
