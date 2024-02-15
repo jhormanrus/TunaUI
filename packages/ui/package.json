@@ -17,7 +17,7 @@
     "@vue/tsconfig": "^0.5.1",
     "histoire": "^0.17.9",
     "tslib": "^2.6.2",
-    "vite": "^5.1.1"
+    "vite": "^5.1.2"
   },
   "dependencies": {
     "@master/css-runtime": "rc",
