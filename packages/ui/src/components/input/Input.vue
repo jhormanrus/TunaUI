@@ -7,10 +7,11 @@ withDefaults(
     id?: string
     idLabel?: string
     type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
-    size?: 'sm' | 'lg' | 'md'
     label?: string
     placeholder?: string
+    size?: 'sm' | 'lg' | 'md'
     required?: boolean
+    readonly?: boolean
     popovertarget?: string
   }>(),
   {
@@ -41,6 +42,7 @@ const value = defineModel<T>()
         :type="type"
         :placeholder="placeholder"
         :required="required"
+        :readonly="readonly"
         :popovertarget="popovertarget"
         @click="emit('click', $event)"
       />
