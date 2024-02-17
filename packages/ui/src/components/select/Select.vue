@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, ref } from 'vue'
+import { computed, ref, type Ref, watch } from 'vue'
 import Input from '../input/Input.vue'
 import IconDown from '../icon/IconChevronDown.vue'
 import Datalist from '../datalist/Datalist.vue'
@@ -23,6 +23,7 @@ const value = defineModel<SelectOption<T>>()
 const dataList = ref<InstanceType<typeof Datalist>>()
 const open = ref(false)
 const searchQuery = ref('')
+const filteredOptions: Ref<SelectOption<T>[]> = ref([])
 
 const formattedValue = computed<string>(() => {
   if (!value.value) return ''
@@ -37,10 +38,15 @@ const textValue = computed({
     searchQuery.value = value
   }
 })
+const internalPlaceholder = computed(() =>
+  props.search && open.value ? formattedValue.value : props.placeholder
+)
 
 const id = Math.random().toString(36).substring(7)
 const idLabel = `select-label-${id}`
 const idOptions = `select-options-${id}`
+
+watch(searchQuery, filterOptions, { immediate: true })
 
 function showPopover() {
   dataList.value?.element?.showPopover()
@@ -58,7 +64,28 @@ function onToggle(e: ToggleEvent) {
 
 function selectOption(option: SelectOption<T>) {
   value.value = option
+  searchQuery.value = ''
   hidePopover()
+}
+
+function filterOptions(query: string) {
+  if (query.length > 0) {
+    filteredOptions.value = props.options.filter(hymn => {
+      const normalizedKey = normalizeWord(hymn.key.toLowerCase())
+      const normalizedQuery = normalizeWord(query.toLowerCase())
+      const arrayQuery = normalizedQuery.split(/\s+/)
+      return arrayQuery.every(word => normalizedKey.includes(word))
+    })
+  } else {
+    filteredOptions.value = props.options
+  }
+}
+
+function normalizeWord(word: string) {
+  return word
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .normalize('NFC')
 }
 </script>
 
@@ -69,7 +96,7 @@ function selectOption(option: SelectOption<T>) {
       class="{anchor-name:--select-button}"
       :id-label="idLabel"
       :label="label"
-      :placeholder="placeholder"
+      :placeholder="internalPlaceholder"
       :size="size"
       :readonly="!search"
       :popovertarget="idOptions"
@@ -87,7 +114,7 @@ function selectOption(option: SelectOption<T>) {
       @toggle="onToggle"
     >
       <option
-        v-for="option in options"
+        v-for="option in filteredOptions"
         class="bg:gray-50/.1:hover px:12 py:8 r:8 cursor:pointer transition:background-color|100ms|linear"
         :value="option.value"
         @click="selectOption(option)"
