@@ -23,6 +23,7 @@ import IconChevronRight from '../../components/icon/IconChevronRight.vue'
 import IconChevronUp from '../../components/icon/IconChevronUp.vue'
 import IconClipboard from '../../components/icon/IconClipboard.vue'
 import IconClock from '../../components/icon/IconClock.vue'
+import IconsCoins from '../../components/icon/IconsCoins.vue'
 import IconColorSwatch from '../../components/icon/IconColorSwatch.vue'
 import IconCookie from '../../components/icon/IconCookie.vue'
 import IconCreditCard from '../../components/icon/IconCreditCard.vue'
@@ -34,11 +35,20 @@ import IconEye from '../../components/icon/IconEye.vue'
 import IconEyeClosed from '../../components/icon/IconEyeClosed.vue'
 import IconFile from '../../components/icon/IconFile.vue'
 import IconFiles from '../../components/icon/IconFiles.vue'
+import IconFilter from '../../components/icon/IconFilter.vue'
+import IconGift from '../../components/icon/IconGift.vue'
+import IconHash from '../../components/icon/IconHash.vue'
+import IconHeadphones from '../../components/icon/IconHeadphones.vue'
+import IconHeart from '../../components/icon/IconHeart.vue'
+import IconHeartFilled from '../../components/icon/IconHeartFilled.vue'
+import IconHistory from '../../components/icon/IconHistory.vue'
 import IconInfoCircle from '../../components/icon/IconInfoCircle.vue'
 import IconMoodHappy from '../../components/icon/IconMoodHappy.vue'
-import IconsCoins from '../../components/icon/IconsCoins.vue'
 import IconSearch from '../../components/icon/IconSearch.vue'
 import IconSelector from '../../components/icon/IconSelector.vue'
+import IconSquareRounded from '../../components/icon/IconSquareRounded.vue'
+import IconSquareRoundedMinusFilled from '../../components/icon/IconSquareRoundedMinusFilled.vue'
+import IconSquareRoundedCheckFilled from '../../components/icon/IconSquareRoundedCheckFilled.vue'
 import IconX from '../../components/icon/IconX.vue'
 
 const width = ref()
@@ -69,11 +79,31 @@ const icons = [
   { name: 'clipboard', component: IconClipboard },
   { name: 'clock', component: IconClock },
   { name: 'coins', component: IconsCoins },
+  { name: 'color-swatch', component: IconColorSwatch },
+  { name: 'cookie', component: IconCookie },
   { name: 'credit-card', component: IconCreditCard },
+  { name: 'crop', component: IconCrop },
+  { name: 'cut', component: IconCut },
+  { name: 'dots', component: IconDots },
+  { name: 'dots-vertical', component: IconDotsVertical },
+  { name: 'eye', component: IconEye },
+  { name: 'eye-closed', component: IconEyeClosed },
+  { name: 'file', component: IconFile },
+  { name: 'files', component: IconFiles },
+  { name: 'filter', component: IconFilter },
+  { name: 'gift', component: IconGift },
+  { name: 'hash', component: IconHash },
+  { name: 'headphones', component: IconHeadphones },
+  { name: 'heart', component: IconHeart },
+  { name: 'heart-filled', component: IconHeartFilled },
+  { name: 'history', component: IconHistory },
   { name: 'info-circle', component: IconInfoCircle },
   { name: 'mood-happy', component: IconMoodHappy },
   { name: 'search', component: IconSearch },
   { name: 'selector', component: IconSelector },
+  { name: 'square-rounded', component: IconSquareRounded },
+  { name: 'square-rounded-check-filled', component: IconSquareRoundedCheckFilled },
+  { name: 'square-rounded-minus-filled', component: IconSquareRoundedMinusFilled },
   { name: 'x', component: IconX },
 ]
 </script>
