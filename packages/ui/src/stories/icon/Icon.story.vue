@@ -55,8 +55,8 @@ const width = ref()
 const height = ref()
 
 const icons = [
-  { name: 'adjustments-horizontal', component: IconAdjustmentsHorizontal },
   { name: 'adjustments', component: IconAdjustments },
+  { name: 'adjustments-horizontal', component: IconAdjustmentsHorizontal },
   { name: 'alert-circle', component: IconAlertCircle },
   { name: 'archive', component: IconArchive },
   { name: 'assembly', component: IconAssembly },
