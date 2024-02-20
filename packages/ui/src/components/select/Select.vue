@@ -1,8 +1,10 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, type Ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Input from '../input/Input.vue'
-import IconDown from '../icon/IconChevronDown.vue'
+import IconChevronDown from '../icon/IconChevronDown.vue'
 import Datalist from '../datalist/Datalist.vue'
+import IconSquareRounded from '../icon/IconSquareRounded.vue'
+import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
 
 export type SelectOption<T> = {
   value: T
@@ -18,16 +20,35 @@ const props = defineProps<{
   multiple?: boolean
 }>()
 
-const value = defineModel<SelectOption<T>>()
+const value = defineModel<SelectOption<T> | SelectOption<T>[]>()
 
 const dataList = ref<InstanceType<typeof Datalist>>()
 const open = ref(false)
 const searchQuery = ref('')
-const filteredOptions: Ref<SelectOption<T>[]> = ref([])
 
+const filteredOptions = computed(() => {
+  const selectedOptions = props.options.map(option => ({
+    ...option,
+    selected: isSelected(option)
+  }))
+  if (searchQuery.value.length > 0) {
+    return selectedOptions.filter(hymn => {
+      const normalizedKey = normalizeWord(hymn.key.toLowerCase())
+      const normalizedQuery = normalizeWord(searchQuery.value.toLowerCase())
+      const arrayQuery = normalizedQuery.split(/\s+/)
+      return arrayQuery.every(word => normalizedKey.includes(word))
+    })
+  }
+  return selectedOptions
+})
 const formattedValue = computed<string>(() => {
   if (!value.value) return ''
-  return value.value.key
+  if (props.multiple) {
+    return (value.value as SelectOption<T>[])
+      .reduce<string[]>((list, element) => list.concat([element.key]), [])
+      .join(', ')
+  }
+  return (value.value as SelectOption<T>).key
 })
 const textValue = computed({
   get: () => {
@@ -42,11 +63,15 @@ const internalPlaceholder = computed(() =>
   props.search && open.value ? formattedValue.value : props.placeholder
 )
 
+onMounted(() => {
+  if (props.multiple && !Array.isArray(value.value)) {
+    value.value = []
+  }
+})
+
 const id = Math.random().toString(36).substring(7)
 const idLabel = `select-label-${id}`
 const idOptions = `select-options-${id}`
-
-watch(searchQuery, filterOptions, { immediate: true })
 
 function showPopover() {
   dataList.value?.element?.showPopover()
@@ -63,21 +88,17 @@ function onToggle(e: ToggleEvent) {
 }
 
 function selectOption(option: SelectOption<T>) {
-  value.value = option
   searchQuery.value = ''
-  hidePopover()
-}
-
-function filterOptions(query: string) {
-  if (query.length > 0) {
-    filteredOptions.value = props.options.filter(hymn => {
-      const normalizedKey = normalizeWord(hymn.key.toLowerCase())
-      const normalizedQuery = normalizeWord(query.toLowerCase())
-      const arrayQuery = normalizedQuery.split(/\s+/)
-      return arrayQuery.every(word => normalizedKey.includes(word))
-    })
+  if (props.multiple) {
+    const opIndex = (value.value as SelectOption<T>[]).findIndex(o => o.value === option.value)
+    if (opIndex >= 0) {
+      (value.value as SelectOption<T>[]).splice(opIndex, 1)
+    } else {
+      (value.value as SelectOption<T>[]).push(option)
+    }
   } else {
-    filteredOptions.value = props.options
+    value.value = option
+    hidePopover()
   }
 }
 
@@ -87,10 +108,17 @@ function normalizeWord(word: string) {
     .replace(/\p{Diacritic}/gu, '')
     .normalize('NFC')
 }
+
+function isSelected(option: SelectOption<T>) {
+  if (props.multiple) {
+    return (value.value as SelectOption<T>[])?.map(o => o.value).includes(option.value)
+  }
+  return value.value === option.value
+}
 </script>
 
 <template>
-  <div class="rotate(180):has(:popover-open)_svg">
+  <div class="rotate(180):has(:popover-open)_svg.icon-chevron-down">
     <Input
       v-model="textValue"
       class="{anchor-name:--select-button}"
@@ -103,7 +131,7 @@ function normalizeWord(word: string) {
       @click="showPopover"
     >
       <template #right-aside>
-        <IconDown class="flex-shrink:0 fg:gray-60 transition:transform|100ms|linear" width="20" />
+        <IconChevronDown class="flex-shrink:0 fg:gray-60 transition:transform|100ms|linear" width="20" stroke-width="2" />
       </template>
     </Input>
     <Datalist
@@ -112,15 +140,20 @@ function normalizeWord(word: string) {
       :id="idOptions"
       :anchor="idLabel"
       @toggle="onToggle"
+      @mousedown.prevent
     >
-      <option
-        v-for="option in filteredOptions"
-        class="bg:gray-50/.1:hover px:12 py:8 r:8 cursor:pointer transition:background-color|100ms|linear"
-        :value="option.value"
+      <div
+        v-for="(option, i) in filteredOptions"
+        class="flex ai:center gap:8 bg:gray-50/.1:hover px:12 py:8 r:8 cursor:pointer transition:background-color|100ms|linear"
+        :key="i"
         @click="selectOption(option)"
       >
         {{ option.key }}
-      </option>
+        <template v-if="multiple">
+          <IconSquareRoundedCheckFilled v-if="option.selected" class="ml:auto fg:gray-60 my:-3 mr:-3" width="24" />
+          <IconSquareRounded v-else class="ml:auto fg:gray-30 my:-3 mr:-3" width="24" stroke-width="1" />
+        </template>
+      </div>
     </Datalist>
   </div>
 </template>

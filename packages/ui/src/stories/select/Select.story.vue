@@ -4,6 +4,7 @@ import Select from '../../components/select/Select.vue'
 
 const value = ref()
 const placeholder = ref('placeholder')
+const multiple = ref(false)
 
 const options = [
   { value: '1', key: 'Option 1' },
@@ -17,7 +18,7 @@ const options = [
 <template>
   <Story :layout="{ type: 'grid', width: 240 }" auto-props-disabled>
     <Variant title="primary">
-      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" />
+      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" :multiple="multiple" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -25,7 +26,7 @@ const options = [
     </Variant>
 
     <Variant title="secondary">
-      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" />
+      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" :multiple="multiple" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -33,7 +34,7 @@ const options = [
     </Variant>
 
     <Variant title="destructive">
-      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" />
+      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" :multiple="multiple" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
