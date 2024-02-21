@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends Record<string, any>">
 import { computed, onMounted, ref } from 'vue'
 import Input from '../input/Input.vue'
 import IconChevronDown from '../icon/IconChevronDown.vue'
@@ -6,21 +6,39 @@ import Datalist from '../datalist/Datalist.vue'
 import IconSquareRounded from '../icon/IconSquareRounded.vue'
 import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
 
-export type SelectOption<T> = {
-  value: T
-  key: string
-}
+const props = withDefaults(
+  defineProps<{
+    modelValue?: T | T[]
+    label: string
+    placeholder?: string
+    size?: 'sm' | 'lg' | 'md'
+    options: T[]
+    bindValue?: string
+    bindLabel?: string
+    search?: boolean
+    multiple?: boolean
+  }>(),
+  {
+    bindLabel: 'label',
+  }
+)
+const emit = defineEmits<(e: 'update:modelValue', value?: T | T[]) => undefined>()
 
-const props = defineProps<{
-  label?: string
-  placeholder?: string
-  size?: 'sm' | 'lg' | 'md'
-  options: SelectOption<T>[]
-  search?: boolean
-  multiple?: boolean
-}>()
-
-const value = defineModel<SelectOption<T> | SelectOption<T>[]>()
+const value = computed<T | T[] | undefined>({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit(
+      'update:modelValue',
+      props.bindValue
+        ? props.multiple
+          ? (value as T[]).map(v => (props.bindValue ? v[props.bindValue] : v))
+          : (value as T)[props.bindValue]
+        : value
+    )
+  }
+})
 
 const dataList = ref<InstanceType<typeof Datalist>>()
 const open = ref(false)
@@ -32,8 +50,8 @@ const filteredOptions = computed(() => {
     selected: isSelected(option)
   }))
   if (searchQuery.value.length > 0) {
-    return selectedOptions.filter(hymn => {
-      const normalizedKey = normalizeWord(hymn.key.toLowerCase())
+    return selectedOptions.filter(option => {
+      const normalizedKey = normalizeWord(option[props.bindLabel].toLowerCase())
       const normalizedQuery = normalizeWord(searchQuery.value.toLowerCase())
       const arrayQuery = normalizedQuery.split(/\s+/)
       return arrayQuery.every(word => normalizedKey.includes(word))
@@ -44,11 +62,11 @@ const filteredOptions = computed(() => {
 const formattedValue = computed<string>(() => {
   if (!value.value) return ''
   if (props.multiple) {
-    return (value.value as SelectOption<T>[])
-      .reduce<string[]>((list, element) => list.concat([element.key]), [])
+    return (value.value as T[])
+      .reduce<string[]>((list, element) => list.concat([element.label]), [])
       .join(', ')
   }
-  return (value.value as SelectOption<T>).key
+  return (value.value as T).label
 })
 const textValue = computed({
   get: () => {
@@ -87,15 +105,13 @@ function onToggle(e: ToggleEvent) {
   open.value = e.newState === 'open'
 }
 
-function selectOption(option: SelectOption<T>) {
+function selectOption(option: T) {
   searchQuery.value = ''
   if (props.multiple) {
-    const opIndex = (value.value as SelectOption<T>[]).findIndex(o => o.value === option.value)
-    if (opIndex >= 0) {
-      (value.value as SelectOption<T>[]).splice(opIndex, 1)
-    } else {
-      (value.value as SelectOption<T>[]).push(option)
-    }
+    const opIndex = (value.value as T[]).findIndex(o => o === option)
+    opIndex >= 0
+      ? (value.value as T[]).splice(opIndex, 1)
+      : (value.value as T[]).push(option)
   } else {
     value.value = option
     hidePopover()
@@ -109,16 +125,19 @@ function normalizeWord(word: string) {
     .normalize('NFC')
 }
 
-function isSelected(option: SelectOption<T>) {
+function isSelected(option: T) {
   if (props.multiple) {
-    return (value.value as SelectOption<T>[])?.map(o => o.value).includes(option.value)
+    return (value.value as T[])
+      ?.map(o => props.bindValue ? o[props.bindValue] : o)
+      .includes(props.bindValue ? option[props.bindValue] : option)
   }
-  return value.value === option.value
+  return value.value === (props.bindValue ? option[props.bindValue] : option)
 }
 </script>
 
 <template>
   <div class="rotate(180):has(:popover-open)_svg.icon-chevron-down">
+    {{ value }}
     <Input
       v-model="textValue"
       class="{anchor-name:--select-button}"
@@ -148,7 +167,7 @@ function isSelected(option: SelectOption<T>) {
         :key="i"
         @click="selectOption(option)"
       >
-        {{ option.key }}
+        {{ option.label }}
         <template v-if="multiple">
           <IconSquareRoundedCheckFilled v-if="option.selected" class="ml:auto fg:gray-60 my:-3 mr:-3" width="24" />
           <IconSquareRounded v-else class="ml:auto fg:gray-30 my:-3 mr:-3" width="24" stroke-width="1" />

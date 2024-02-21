@@ -7,18 +7,18 @@ const placeholder = ref('placeholder')
 const multiple = ref(false)
 
 const options = [
-  { value: '1', key: 'Option 1' },
-  { value: '2', key: 'Option 2' },
-  { value: '3', key: 'Option 3' },
-  { value: '4', key: 'Option 4' },
-  { value: '5', key: 'Option 5' },
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2' },
+  { value: '3', label: 'Option 3' },
+  { value: '4', label: 'Option 4' },
+  { value: '5', label: 'Option 5' },
 ]
 </script>
 
 <template>
   <Story :layout="{ type: 'grid', width: 240 }" auto-props-disabled>
     <Variant title="primary">
-      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" :multiple="multiple" />
+      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" :multiple="multiple" bind-value="value" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -26,7 +26,7 @@ const options = [
     </Variant>
 
     <Variant title="secondary">
-      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" :multiple="multiple" />
+      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" :multiple="multiple" bind-value="value" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -34,7 +34,7 @@ const options = [
     </Variant>
 
     <Variant title="destructive">
-      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" :multiple="multiple" />
+      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" :multiple="multiple" bind-value="value" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
