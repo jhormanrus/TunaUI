@@ -26,7 +26,11 @@ const emit = defineEmits<(e: 'update:modelValue', value?: T | T[]) => undefined>
 
 const value = computed<T | T[] | undefined>({
   get() {
-    return props.modelValue
+    return props.bindValue
+      ? props.multiple
+        ? props.options.filter(o => (props.modelValue as T[]).includes(o[props.bindValue!]))
+        : props.options.find(o => o[props.bindValue!] === props.modelValue)
+      : props.modelValue
   },
   set(value) {
     emit(
@@ -108,10 +112,14 @@ function onToggle(e: ToggleEvent) {
 function selectOption(option: T) {
   searchQuery.value = ''
   if (props.multiple) {
-    const opIndex = (value.value as T[]).findIndex(o => o === option)
-    opIndex >= 0
-      ? (value.value as T[]).splice(opIndex, 1)
-      : (value.value as T[]).push(option)
+    const opIndex = (value.value as T[])
+      .map(o => (props.bindValue ? o[props.bindValue] : o))
+      .indexOf(props.bindValue ? option[props.bindValue] : option)
+    if (opIndex >= 0) {
+      value.value = (value.value as T[]).filter((_, i) => i !== opIndex)
+    } else {
+      value.value = (value.value as T[]).concat(option)
+    }
   } else {
     value.value = option
     hidePopover()
@@ -127,9 +135,10 @@ function normalizeWord(word: string) {
 
 function isSelected(option: T) {
   if (props.multiple) {
-    return (value.value as T[])
-      ?.map(o => props.bindValue ? o[props.bindValue] : o)
-      .includes(props.bindValue ? option[props.bindValue] : option)
+    return props.bindValue
+      ? (value.value as T[]).some(o => o[props.bindValue!] === option[props.bindValue!])
+      : (value.value as T[]).includes(option)
+      // : (value.value as T[]).filter(o => JSON.stringify(o) === JSON.stringify(option)).length > 0
   }
   return value.value === (props.bindValue ? option[props.bindValue] : option)
 }
