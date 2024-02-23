@@ -28,9 +28,13 @@ const value = computed<T | T[] | undefined>({
   get() {
     return props.bindValue
       ? props.multiple
-        ? props.options.filter(o => (props.modelValue as T[]).includes(o[props.bindValue!]))
+        ? Array.isArray(props.modelValue)
+          ? props.modelValue.map(v => props.options.find(o => props.bindValue ? o[props.bindValue!] === v : o === v) ?? v)
+          : []
         : props.options.find(o => o[props.bindValue!] === props.modelValue)
-      : props.modelValue
+      : Array.isArray(props.modelValue) || !props.multiple
+        ? props.modelValue
+        : []
   },
   set(value) {
     emit(
@@ -67,10 +71,10 @@ const formattedValue = computed<string>(() => {
   if (!value.value) return ''
   if (props.multiple) {
     return (value.value as T[])
-      .reduce<string[]>((list, element) => list.concat([element.label]), [])
+      .reduce<string[]>((list, element) => list.concat(element[props.bindLabel]?? element), [])
       .join(', ')
   }
-  return (value.value as T).label
+  return (value.value as T)[props.bindLabel]?? value.value
 })
 const textValue = computed({
   get: () => {
@@ -146,7 +150,6 @@ function isSelected(option: T) {
 
 <template>
   <div class="rotate(180):has(:popover-open)_svg.icon-chevron-down">
-    {{ value }}
     <Input
       v-model="textValue"
       class="{anchor-name:--select-button}"

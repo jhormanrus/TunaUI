@@ -5,15 +5,15 @@ import Select from '../../components/select/Select.vue'
 const value = ref()
 const placeholder = ref('placeholder')
 const multiple = ref(false)
-const bindValue = ref('value')
+const bindValue = ref()
 
-const options = [
+const options = ref([
   { value: '1', label: 'Option 1' },
   { value: '2', label: 'Option 2' },
   { value: '3', label: 'Option 3' },
   { value: '4', label: 'Option 4' },
   { value: '5', label: 'Option 5' },
-]
+])
 </script>
 
 <template>
@@ -26,6 +26,7 @@ const options = [
         <HstText v-model="placeholder" title="placeholder" />
         <HstCheckbox v-model="multiple" title="multiple" />
         <HstText v-model="bindValue" title="bind-value" />
+        <HstJson v-model="options" title="options" />
       </template>
     </Variant>
 
@@ -36,6 +37,7 @@ const options = [
         <HstText v-model="placeholder" title="placeholder" />
         <HstCheckbox v-model="multiple" title="multiple" />
         <HstText v-model="bindValue" title="bind-value" />
+        <HstJson v-model="options" title="options" />
       </template>
     </Variant>
 
@@ -46,6 +48,7 @@ const options = [
         <HstText v-model="placeholder" title="placeholder" />
         <HstCheckbox v-model="multiple" title="multiple" />
         <HstText v-model="bindValue" title="bind-value" />
+        <HstJson v-model="options" title="options" />
       </template>
     </Variant>
   </Story>
