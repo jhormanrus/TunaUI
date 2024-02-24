@@ -119,11 +119,15 @@ async function diffAll(
     process.exit(0)
   }
 
-  const filePaths = componentsWithUpdates.map((component, i) => {
-    const componentName = color.yellow(component.name)
-    const filesPath = component.changes.map((change) => change.filePath).join('\n')
-    return `${componentName}\n${filesPath}`
-  }).join('\n\n')
+  const filePaths = componentsWithUpdates
+    .map((component, i) => {
+      const componentName = color.yellow(component.name)
+      const filesPath = component.changes
+        .map((change) => change.filePath)
+        .join('\n')
+      return `${componentName}\n${filesPath}`
+    })
+    .join('\n\n')
 
   p.note(filePaths, 'The following components have updates available:')
   p.outro(`Run ${color.green('diff <component>')} to see the changes.`)

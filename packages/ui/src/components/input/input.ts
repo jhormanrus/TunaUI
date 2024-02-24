@@ -17,16 +17,13 @@ export const cvWrapper = cv(
   },
 )
 
-export const cvInputWrapper = cv(
-  'rel flex-grow:1',
-  {
-    size: {
-      sm: 'pb:5',
-      md: 'pb:8',
-      lg: 'pb:12',
-    },
+export const cvInputWrapper = cv('rel flex-grow:1', {
+  size: {
+    sm: 'pb:5',
+    md: 'pb:8',
+    lg: 'pb:12',
   },
-)
+})
 
 export const cvLabel = cv(
   'abs fg:gray-50 fg:control-label:has(+:focus) left:0 pointer-events:none top:0 transform-origin:top|left transition:transform|100ms|ease-in',

@@ -12,11 +12,11 @@ export const cvWrapper = cv(
   {
     intent: {
       primary: 'bg:blue bg:blue-55:hover fg:white',
-      secondary: 'bg:white bg:slate-90:hover fg:slate-30'
+      secondary: 'bg:white bg:slate-90:hover fg:slate-30',
     },
     size: {
       sm: 'text:14 p:5|15',
-      md: 'text:16 p:10|25'
-    }
-  }
+      md: 'text:16 p:10|25',
+    },
+  },
 )
