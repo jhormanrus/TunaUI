@@ -1,8 +1,9 @@
-<script setup lang="ts" generic="T extends Record<string, any>">
-import { computed, onMounted, ref } from 'vue'
+<script setup lang="ts" generic="T extends string | number | U, U extends Record<string, any>">
+import { computed, ref } from 'vue'
 import Input from '../input/Input.vue'
 import IconChevronDown from '../icon/IconChevronDown.vue'
 import Datalist from '../datalist/Datalist.vue'
+import IconCheck from '../icon/IconCheck.vue'
 import IconSquareRounded from '../icon/IconSquareRounded.vue'
 import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
 
@@ -12,11 +13,10 @@ const props = withDefaults(
     label: string
     placeholder?: string
     size?: 'sm' | 'lg' | 'md'
-    options: T[]
+    options: U[]
     bindValue?: string
     bindLabel?: string
     search?: boolean
-    multiple?: boolean
   }>(),
   {
     bindLabel: 'label',
@@ -24,25 +24,21 @@ const props = withDefaults(
 )
 const emit = defineEmits<(e: 'update:modelValue', value?: T | T[]) => undefined>()
 
-const value = computed<T | T[] | undefined>({
+const value = computed<U | U[] | undefined>({
   get() {
     return props.bindValue
-      ? props.multiple
-        ? Array.isArray(props.modelValue)
-          ? props.modelValue.map(v => props.options.find(o => props.bindValue ? o[props.bindValue!] === v : o === v) ?? v)
-          : []
+      ? props.modelValue instanceof Array
+        ? (props.modelValue as U[]).map(v => props.options.find(o => props.bindValue ? o[props.bindValue!] === v : o === v) ?? v)
         : props.options.find(o => o[props.bindValue!] === props.modelValue)
-      : Array.isArray(props.modelValue) || !props.multiple
-        ? props.modelValue
-        : []
+      : (props.modelValue as U | U[] | undefined)
   },
   set(value) {
     emit(
       'update:modelValue',
       props.bindValue
-        ? props.multiple
-          ? (value as T[]).map(v => (props.bindValue ? v[props.bindValue] : v))
-          : (value as T)[props.bindValue]
+        ? value instanceof Array
+          ? value.map(v => (props.bindValue ? v[props.bindValue] : v))
+          : value instanceof Object && value[props.bindValue]
         : value
     )
   }
@@ -69,12 +65,12 @@ const filteredOptions = computed(() => {
 })
 const formattedValue = computed<string>(() => {
   if (!value.value) return ''
-  if (props.multiple) {
-    return (value.value as T[])
+  if (isMultiple) {
+    return (value.value as U[])
       .reduce<string[]>((list, element) => list.concat(element[props.bindLabel]?? element), [])
       .join(', ')
   }
-  return (value.value as T)[props.bindLabel]?? value.value
+  return (value.value as U)[props.bindLabel]?? value.value
 })
 const textValue = computed({
   get: () => {
@@ -88,12 +84,7 @@ const textValue = computed({
 const internalPlaceholder = computed(() =>
   props.search && open.value ? formattedValue.value : props.placeholder
 )
-
-onMounted(() => {
-  if (props.multiple && !Array.isArray(value.value)) {
-    value.value = []
-  }
-})
+const isMultiple = computed(() => Array.isArray(props.modelValue))
 
 const id = Math.random().toString(36).substring(7)
 const idLabel = `select-label-${id}`
@@ -113,16 +104,16 @@ function onToggle(e: ToggleEvent) {
   open.value = e.newState === 'open'
 }
 
-function selectOption(option: T) {
+function selectOption(option: U) {
   searchQuery.value = ''
-  if (props.multiple) {
-    const opIndex = (value.value as T[])
+  if (isMultiple) {
+    const opIndex = (value.value as U[])
       .map(o => (props.bindValue ? o[props.bindValue] : o))
       .indexOf(props.bindValue ? option[props.bindValue] : option)
     if (opIndex >= 0) {
-      value.value = (value.value as T[]).filter((_, i) => i !== opIndex)
+      value.value = (value.value as U[]).filter((_, i) => i !== opIndex)
     } else {
-      value.value = (value.value as T[]).concat(option)
+      value.value = (value.value as U[]).concat(option)
     }
   } else {
     value.value = option
@@ -137,11 +128,11 @@ function normalizeWord(word: string) {
     .normalize('NFC')
 }
 
-function isSelected(option: T) {
-  if (props.multiple) {
+function isSelected(option: U) {
+  if (isMultiple) {
     return props.bindValue
-      ? (value.value as T[]).some(o => o[props.bindValue!] === option[props.bindValue!])
-      : (value.value as T[]).includes(option)
+      ? (value.value as U[]).some(o => o[props.bindValue!] === option[props.bindValue!])
+      : (value.value as U[]).includes(option)
       // : (value.value as T[]).filter(o => JSON.stringify(o) === JSON.stringify(option)).length > 0
   }
   return value.value === (props.bindValue ? option[props.bindValue] : option)
@@ -180,9 +171,12 @@ function isSelected(option: T) {
         @click="selectOption(option)"
       >
         {{ option.label }}
-        <template v-if="multiple">
+        <template v-if="isMultiple">
           <IconSquareRoundedCheckFilled v-if="option.selected" class="ml:auto fg:gray-60 my:-3 mr:-3" width="24" />
           <IconSquareRounded v-else class="ml:auto fg:gray-30 my:-3 mr:-3" width="24" stroke-width="1" />
+        </template>
+        <template v-else>
+          <IconCheck v-if="option.selected" class="ml:auto fg:gray-60 my:-3 mr:-3" width="20" stroke-width="2" />
         </template>
       </div>
     </Datalist>
