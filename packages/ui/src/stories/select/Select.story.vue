@@ -4,7 +4,6 @@ import Select from '../../components/select/Select.vue'
 
 const value = ref()
 const placeholder = ref('placeholder')
-const multiple = ref(false)
 const bindValue = ref()
 
 const options = ref([
@@ -20,33 +19,30 @@ const options = ref([
   <Story :layout="{ type: 'grid', width: 240 }" auto-props-disabled>
     <Variant title="primary">
       {{ value }}
-      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" :multiple="multiple" :bind-value="bindValue" />
+      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" :bind-value="bindValue" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
-        <HstCheckbox v-model="multiple" title="multiple" />
         <HstText v-model="bindValue" title="bind-value" />
         <HstJson v-model="options" title="options" />
       </template>
     </Variant>
 
     <Variant title="secondary">
-      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" :multiple="multiple" :bind-value="bindValue" />
+      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" :bind-value="bindValue" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
-        <HstCheckbox v-model="multiple" title="multiple" />
         <HstText v-model="bindValue" title="bind-value" />
         <HstJson v-model="options" title="options" />
       </template>
     </Variant>
 
     <Variant title="destructive">
-      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" :multiple="multiple" :bind-value="bindValue" />
+      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" :bind-value="bindValue" />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
-        <HstCheckbox v-model="multiple" title="multiple" />
         <HstText v-model="bindValue" title="bind-value" />
         <HstJson v-model="options" title="options" />
       </template>

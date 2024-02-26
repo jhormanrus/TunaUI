@@ -65,7 +65,7 @@ const filteredOptions = computed(() => {
 })
 const formattedValue = computed<string>(() => {
   if (!value.value) return ''
-  if (isMultiple) {
+  if (isMultiple.value) {
     return (value.value as U[])
       .reduce<string[]>((list, element) => list.concat(element[props.bindLabel]?? element), [])
       .join(', ')
@@ -106,7 +106,7 @@ function onToggle(e: ToggleEvent) {
 
 function selectOption(option: U) {
   searchQuery.value = ''
-  if (isMultiple) {
+  if (isMultiple.value) {
     const opIndex = (value.value as U[])
       .map(o => (props.bindValue ? o[props.bindValue] : o))
       .indexOf(props.bindValue ? option[props.bindValue] : option)
@@ -129,11 +129,10 @@ function normalizeWord(word: string) {
 }
 
 function isSelected(option: U) {
-  if (isMultiple) {
+  if (isMultiple.value) {
     return props.bindValue
       ? (value.value as U[]).some(o => o[props.bindValue!] === option[props.bindValue!])
       : (value.value as U[]).includes(option)
-      // : (value.value as T[]).filter(o => JSON.stringify(o) === JSON.stringify(option)).length > 0
   }
   return value.value === (props.bindValue ? option[props.bindValue] : option)
 }
