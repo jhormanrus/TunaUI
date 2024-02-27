@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends string | number | U, U extends Record<string, any>">
+<script setup lang="ts" generic="U extends Record<string, any>">
 import { computed, ref } from 'vue'
 import Input from '../input/Input.vue'
 import IconChevronDown from '../icon/IconChevronDown.vue'
@@ -9,7 +9,7 @@ import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.v
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: T | T[]
+    modelValue?: string | number | U | string[] | number[] | U[]
     label: string
     placeholder?: string
     size?: 'sm' | 'lg' | 'md'
@@ -22,22 +22,33 @@ const props = withDefaults(
     bindLabel: 'label',
   }
 )
-const emit = defineEmits<(e: 'update:modelValue', value?: T | T[]) => undefined>()
+const emit = defineEmits<(e: 'update:modelValue', value?: U | U[]) => undefined>()
 
-const value = computed<U | U[] | undefined>({
+const value = computed<string | number | U | string[] | number[] | U[] | undefined>({
   get() {
-    return props.bindValue
-      ? props.modelValue instanceof Array
-        ? (props.modelValue as U[]).map(v => props.options.find(o => props.bindValue ? o[props.bindValue!] === v : o === v) ?? v)
-        : props.options.find(o => o[props.bindValue!] === props.modelValue)
-      : (props.modelValue as U | U[] | undefined)
+    // if (props.bindValue) {
+    //   return Array.isArray(props.modelValue)
+    //     ? props.modelValue.map(v => props.options.find(o => props.bindValue ? o[props.bindValue!] === v : o === v) ?? v)
+    //     : props.options.find(o => o[props.bindValue!] === props.modelValue)
+    // } else {
+    //   return props.modelValue
+    // }
+    if (Array.isArray(props.modelValue)) {
+      return props.bindValue
+        ? props.modelValue.map(v => props.options.find(o => o[props.bindValue!] === v) ?? v) as string[] | number[] | U[]
+        : props.modelValue.map(v => props.options.find(o => o === v) ?? v) as string[] | number[] | U[]
+    } else {
+      return props.bindValue
+        ? props.options.find(o => o[props.bindValue!] === props.modelValue)
+        : props.modelValue
+    }
   },
   set(value) {
     emit(
       'update:modelValue',
       props.bindValue
-        ? value instanceof Array
-          ? value.map(v => (props.bindValue ? v[props.bindValue] : v))
+        ? Array.isArray(value)
+          ? value.map(v => (props.bindValue && typeof v === 'object' ? v[props.bindValue] : v))
           : value instanceof Object && value[props.bindValue]
         : value
     )
@@ -65,9 +76,9 @@ const filteredOptions = computed(() => {
 })
 const formattedValue = computed<string>(() => {
   if (!value.value) return ''
-  if (isMultiple.value) {
-    return (value.value as U[])
-      .reduce<string[]>((list, element) => list.concat(element[props.bindLabel]?? element), [])
+  if (Array.isArray(value.value)) {
+    return value.value
+      .reduce((list, element) => list.concat((element as U)[props.bindLabel]?? element), [])
       .join(', ')
   }
   return (value.value as U)[props.bindLabel]?? value.value
@@ -106,14 +117,14 @@ function onToggle(e: ToggleEvent) {
 
 function selectOption(option: U) {
   searchQuery.value = ''
-  if (isMultiple.value) {
-    const opIndex = (value.value as U[])
-      .map(o => (props.bindValue ? o[props.bindValue] : o))
+  if (Array.isArray(value.value)) {
+    const opIndex = value.value
+      .map(o => (props.bindValue ? (o as U)[props.bindValue] : o))
       .indexOf(props.bindValue ? option[props.bindValue] : option)
     if (opIndex >= 0) {
-      value.value = (value.value as U[]).filter((_, i) => i !== opIndex)
+      value.value = value.value.filter((_, i) => i !== opIndex) as string[] | number[] | U[]
     } else {
-      value.value = (value.value as U[]).concat(option)
+      value.value = value.value.concat(option) as string[] | number[] | U[]
     }
   } else {
     value.value = option
@@ -129,9 +140,9 @@ function normalizeWord(word: string) {
 }
 
 function isSelected(option: U) {
-  if (isMultiple.value) {
+  if (Array.isArray(value.value)) {
     return props.bindValue
-      ? (value.value as U[]).some(o => o[props.bindValue!] === option[props.bindValue!])
+      ? value.value.some(o => (o as U)[props.bindValue!] === option[props.bindValue!])
       : (value.value as U[]).includes(option)
   }
   return value.value === (props.bindValue ? option[props.bindValue] : option)
