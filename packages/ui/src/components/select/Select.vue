@@ -6,6 +6,7 @@ import Datalist from '../datalist/Datalist.vue'
 import IconCheck from '../icon/IconCheck.vue'
 import IconSquareRounded from '../icon/IconSquareRounded.vue'
 import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
+import { cvIconChevron, cvIconSelected, cvOptionsWrapper, cvSearch, cvWrapper } from './select'
 
 const props = withDefaults(
   defineProps<{
@@ -19,6 +20,7 @@ const props = withDefaults(
     search?: boolean
   }>(),
   {
+    size: 'md',
     bindLabel: 'label',
   }
 )
@@ -150,10 +152,10 @@ function isSelected(option: U) {
 </script>
 
 <template>
-  <div class="rotate(180):has(:popover-open)_svg.icon-chevron-down">
+  <div :class="cvWrapper()">
     <Input
       v-model="textValue"
-      class="{anchor-name:--select-button}"
+      :class="cvSearch()"
       :id-label="idLabel"
       :label="label"
       :placeholder="internalPlaceholder"
@@ -163,7 +165,7 @@ function isSelected(option: U) {
       @click="showPopover"
     >
       <template #right-aside>
-        <IconChevronDown class="flex-shrink:0 fg:gray-60 transition:transform|100ms|linear" width="20" stroke-width="2" />
+        <IconChevronDown :class="cvIconChevron({ size })" stroke-width="2" />
       </template>
     </Input>
     <Datalist
@@ -176,17 +178,17 @@ function isSelected(option: U) {
     >
       <div
         v-for="(option, i) in filteredOptions"
-        class="flex ai:center gap:8 bg:gray-50/.1:hover px:12 py:8 r:8 cursor:pointer transition:background-color|100ms|linear"
+        :class="cvOptionsWrapper()"
         :key="i"
         @click="selectOption(option)"
       >
         {{ option.label }}
         <template v-if="isMultiple">
-          <IconSquareRoundedCheckFilled v-if="option.selected" class="ml:auto fg:gray-60 my:-3 mr:-3" width="24" />
-          <IconSquareRounded v-else class="ml:auto fg:gray-30 my:-3 mr:-3" width="24" stroke-width="1" />
+          <IconSquareRoundedCheckFilled v-if="option.selected" :class="cvIconSelected()" width="24" />
+          <IconSquareRounded v-else :class="cvIconSelected()" width="24" stroke-width="1" />
         </template>
         <template v-else>
-          <IconCheck v-if="option.selected" class="ml:auto fg:gray-60 my:-3 mr:-3" width="20" stroke-width="2" />
+          <IconCheck v-if="option.selected" :class="cvIconSelected()" width="20" stroke-width="2" />
         </template>
       </div>
     </Datalist>
