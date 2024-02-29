@@ -25,7 +25,14 @@ const emit = defineEmits<{
   click: [e: MouseEvent]
 }>()
 
-const value = defineModel<T>()
+const [value, modifiers] = defineModel<T>({
+  set(value) {
+    if (modifiers.null && value === '') {
+      return null
+    }
+    return value
+  }
+})
 </script>
 
 <template>
