@@ -20,7 +20,14 @@ withDefaults(
   }
 )
 
-const value = defineModel<TextAreaValue>()
+const [value, modifiers] = defineModel<TextAreaValue>({
+  set(value) {
+    if (modifiers.null && value === '') {
+      return null
+    }
+    return value
+  }
+})
 </script>
 
 <template>
