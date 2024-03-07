@@ -1,10 +1,13 @@
 import cv from 'class-variant'
 
-export const cvWrapper = cv('rotate(180):has(:popover-open)_svg.icon-chevron-down')
+export const cvWrapper = cv(
+  'rotate(180):has(:popover-open)_svg.icon-chevron-down',
+)
 
 export const cvSearch = cv('{anchor-name:--select-button}')
 
-export const cvIconChevron = cv('flex-shrink:0 fg:gray-60 transition:transform|100ms|linear',
+export const cvIconChevron = cv(
+  'flex-shrink:0 fg:gray-60 transition:transform|100ms|linear',
   {
     size: {
       sm: 'w:18',

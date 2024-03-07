@@ -6,7 +6,19 @@ withDefaults(
   defineProps<{
     id?: string
     idLabel?: string
-    type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
+    type?:
+      | 'text'
+      | 'password'
+      | 'email'
+      | 'number'
+      | 'tel'
+      | 'url'
+      | 'search'
+      | 'date'
+      | 'time'
+      | 'datetime-local'
+      | 'month'
+      | 'week'
     label?: string
     placeholder?: string
     size?: 'sm' | 'lg' | 'md'
@@ -18,7 +30,7 @@ withDefaults(
     type: 'text',
     size: 'md',
     placeholder: '',
-  }
+  },
 )
 
 const emit = defineEmits<{
@@ -31,7 +43,7 @@ const [value, modifiers] = defineModel<T>({
       return null
     }
     return value
-  }
+  },
 })
 </script>
 

@@ -1,13 +1,25 @@
 <script lang="ts">
-  import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './input'
+import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './input'
 
-  export let value: unknown = null
-  export let id: string | null = null
-  export let type: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' = 'text'
-  export let size: 'sm' | 'lg' | 'md' = 'md'
-  export let label: string = ''
-  export let placeholder = ''
-  export let required = false
+export let value: unknown = null
+export let id: string | null = null
+export let type:
+  | 'text'
+  | 'password'
+  | 'email'
+  | 'number'
+  | 'tel'
+  | 'url'
+  | 'search'
+  | 'date'
+  | 'time'
+  | 'datetime-local'
+  | 'month'
+  | 'week' = 'text'
+export let size: 'sm' | 'lg' | 'md' = 'md'
+export let label = ''
+export let placeholder = ''
+export let required = false
 </script>
 
 <label class={cvWrapper({ size })}>

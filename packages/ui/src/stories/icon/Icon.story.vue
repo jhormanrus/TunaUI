@@ -23,7 +23,7 @@ import IconChevronRight from '../../components/icon/IconChevronRight.vue'
 import IconChevronUp from '../../components/icon/IconChevronUp.vue'
 import IconClipboard from '../../components/icon/IconClipboard.vue'
 import IconClock from '../../components/icon/IconClock.vue'
-import IconsCoins from '../../components/icon/IconsCoins.vue'
+import IconCoins from '../../components/icon/IconCoins.vue'
 import IconColorSwatch from '../../components/icon/IconColorSwatch.vue'
 import IconCookie from '../../components/icon/IconCookie.vue'
 import IconCreditCard from '../../components/icon/IconCreditCard.vue'
@@ -47,8 +47,8 @@ import IconMoodHappy from '../../components/icon/IconMoodHappy.vue'
 import IconSearch from '../../components/icon/IconSearch.vue'
 import IconSelector from '../../components/icon/IconSelector.vue'
 import IconSquareRounded from '../../components/icon/IconSquareRounded.vue'
-import IconSquareRoundedMinusFilled from '../../components/icon/IconSquareRoundedMinusFilled.vue'
 import IconSquareRoundedCheckFilled from '../../components/icon/IconSquareRoundedCheckFilled.vue'
+import IconSquareRoundedMinusFilled from '../../components/icon/IconSquareRoundedMinusFilled.vue'
 import IconX from '../../components/icon/IconX.vue'
 
 const width = ref()
@@ -78,7 +78,7 @@ const icons = [
   { name: 'chevron-up', component: IconChevronUp },
   { name: 'clipboard', component: IconClipboard },
   { name: 'clock', component: IconClock },
-  { name: 'coins', component: IconsCoins },
+  { name: 'coins', component: IconCoins },
   { name: 'color-swatch', component: IconColorSwatch },
   { name: 'cookie', component: IconCookie },
   { name: 'credit-card', component: IconCreditCard },
@@ -102,8 +102,14 @@ const icons = [
   { name: 'search', component: IconSearch },
   { name: 'selector', component: IconSelector },
   { name: 'square-rounded', component: IconSquareRounded },
-  { name: 'square-rounded-check-filled', component: IconSquareRoundedCheckFilled },
-  { name: 'square-rounded-minus-filled', component: IconSquareRoundedMinusFilled },
+  {
+    name: 'square-rounded-check-filled',
+    component: IconSquareRoundedCheckFilled,
+  },
+  {
+    name: 'square-rounded-minus-filled',
+    component: IconSquareRoundedMinusFilled,
+  },
   { name: 'x', component: IconX },
 ]
 </script>

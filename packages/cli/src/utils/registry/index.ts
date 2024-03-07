@@ -1,9 +1,9 @@
 import {
   RegistryIndexSchema,
-  RegistryItemSchema,
+  type RegistryItemSchema,
   RegistryWithContentSchema,
 } from '@/utils/registry/schema'
-import { type Input, SetInput, parse, string } from 'valibot'
+import { type Input, type SetInput, parse, string } from 'valibot'
 
 export const sourceUrl =
   'https://raw.githubusercontent.com/jhormanrus/LidiaUI/main/packages/ui'

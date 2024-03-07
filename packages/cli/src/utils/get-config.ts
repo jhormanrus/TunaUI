@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import { resolveImport } from '@/utils/resolve-import'
 import { lilconfig } from 'lilconfig'
 import { loadConfig } from 'tsconfig-paths'

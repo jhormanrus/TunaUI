@@ -15,11 +15,7 @@
     "url": "git+https://github.com/jhormanrus/LidiaUI.git",
     "directory": "packages/cli"
   },
-  "keywords": [
-    "components",
-    "ui",
-    "@master/css"
-  ],
+  "keywords": ["components", "ui", "@master/css"],
   "type": "module",
   "scripts": {
     "start": "bun src/index.ts"

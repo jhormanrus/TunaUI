@@ -8,7 +8,7 @@ import packageJson from '../package.json'
 process.on('SIGINT', () => process.exit(0))
 process.on('SIGTERM', () => process.exit(0))
 
-async function main(): Promise<void> {
+function main() {
   const program = new Command()
     .name('lidia')
     .description('add components and dependencies to your project')
@@ -19,4 +19,4 @@ async function main(): Promise<void> {
   program.parse()
 }
 
-await main()
+main()

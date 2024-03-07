@@ -2,7 +2,12 @@
 import { withDefaults } from 'vue'
 import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './textarea'
 
-export type TextAreaValue = string | number | readonly string[] | undefined | null
+export type TextAreaValue =
+  | string
+  | number
+  | readonly string[]
+  | undefined
+  | null
 
 withDefaults(
   defineProps<{
@@ -17,7 +22,7 @@ withDefaults(
     rows: 3,
     size: 'md',
     placeholder: '',
-  }
+  },
 )
 
 const [value, modifiers] = defineModel<TextAreaValue>({
@@ -26,7 +31,7 @@ const [value, modifiers] = defineModel<TextAreaValue>({
       return null
     }
     return value
-  }
+  },
 })
 </script>
 

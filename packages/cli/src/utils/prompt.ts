@@ -1,4 +1,4 @@
-import { existsSync } from 'fs'
+import { existsSync } from 'node:fs'
 import * as p from '@clack/prompts'
 import color from 'picocolors'
 

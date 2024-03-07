@@ -1,7 +1,10 @@
 [
   {
     "name": "button",
-    "files": ["src/components/button/Button.vue", "src/components/button/button.ts"]
+    "files": [
+      "src/components/button/Button.vue",
+      "src/components/button/button.ts"
+    ]
   },
   {
     "name": "input",

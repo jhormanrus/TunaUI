@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { Hst } from '@histoire/plugin-svelte'
-  import Button from '../../components/button/Button.svelte'
+import type { Hst } from '@histoire/plugin-svelte'
+import Button from '../../components/button/Button.svelte'
 
-  export let Hst: Hst
+// biome-ignore lint/suspicious/noRedeclare: This is a false positive
+export let Hst: Hst
 </script>
 
 <Hst.Story

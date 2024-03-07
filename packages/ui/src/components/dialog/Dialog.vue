@@ -3,12 +3,12 @@ import { ref } from 'vue'
 
 defineExpose({
   open,
-  close
+  close,
 })
 
 const dialog = ref<HTMLDialogElement>()
 
-function open (): undefined {
+function open(): undefined {
   dialog.value?.showModal()
   dialog.value?.addEventListener('click', close)
   for (const child of dialog.value?.children ?? []) {
@@ -16,7 +16,7 @@ function open (): undefined {
   }
 }
 
-function close (): undefined {
+function close(): undefined {
   for (const child of dialog.value?.children ?? []) {
     child.removeEventListener('click', stopPropagation)
   }
@@ -24,7 +24,7 @@ function close (): undefined {
   dialog.value?.close()
 }
 
-function stopPropagation (e: Event): undefined {
+function stopPropagation(e: Event): undefined {
   e.stopPropagation()
 }
 </script>

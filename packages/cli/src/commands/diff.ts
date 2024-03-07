@@ -1,15 +1,15 @@
-import { existsSync } from 'fs'
-import path from 'path'
-import { Config, getConfig } from '@/utils/get-config'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { printIntro, validateCwd } from '@/utils/prompt'
 import { fetchTree, getRegistryIndex, sourceUrl } from '@/utils/registry'
-import { RegistryIndexSchema } from '@/utils/registry/schema'
+import type { RegistryIndexSchema } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { $ } from 'bun'
 import { Command } from 'commander'
 import color from 'picocolors'
-import { Input, boolean, object, optional, parse, string } from 'valibot'
+import { type Input, boolean, object, optional, parse, string } from 'valibot'
 
 const UpdateOptionsSchema = object({
   component: optional(string()),

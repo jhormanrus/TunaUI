@@ -1,17 +1,25 @@
-import { existsSync } from 'fs'
-import path from 'path'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
 import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
 import { fetchTree, getRegistryIndex, resolveTree } from '@/utils/registry'
-import {
+import type {
   RegistryItemWithContentSchema,
   RegistryWithContentSchema,
 } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
 import color from 'picocolors'
-import { Input, array, boolean, object, optional, parse, string } from 'valibot'
+import {
+  type Input,
+  array,
+  boolean,
+  object,
+  optional,
+  parse,
+  string,
+} from 'valibot'
 
 const addComponentSpinner = p.spinner()
 
