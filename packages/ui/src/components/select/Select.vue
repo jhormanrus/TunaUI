@@ -57,7 +57,7 @@ const value = computed<string | number | U | string[] | number[] | U[] | undefin
   }
 })
 
-const dataList = ref<InstanceType<typeof Datalist>>()
+const selectWrapper = ref<HTMLElement>()
 const open = ref(false)
 const searchQuery = ref('')
 
@@ -104,12 +104,12 @@ const idLabel = `select-label-${id}`
 const idOptions = `select-options-${id}`
 
 function showPopover() {
-  dataList.value?.element?.showPopover()
+  (selectWrapper.value?.lastElementChild as HTMLElement).showPopover()
   open.value = true
 }
 
 function hidePopover() {
-  dataList.value?.element?.hidePopover()
+  (selectWrapper.value?.lastElementChild as HTMLElement).hidePopover()
   open.value = false
 }
 
@@ -152,7 +152,7 @@ function isSelected(option: U) {
 </script>
 
 <template>
-  <div :class="cvWrapper()">
+  <div ref="selectWrapper" :class="cvWrapper()">
     <Input
       v-model="textValue"
       :class="cvSearch()"
@@ -169,7 +169,6 @@ function isSelected(option: U) {
       </template>
     </Input>
     <Datalist
-      ref="dataList"
       popover
       :id="idOptions"
       :anchor="idLabel"
