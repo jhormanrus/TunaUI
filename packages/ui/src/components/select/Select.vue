@@ -7,6 +7,7 @@ import IconCheck from '../icon/IconCheck.vue'
 import IconSquareRounded from '../icon/IconSquareRounded.vue'
 import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
 import { cvIconChevron, cvIconSelected, cvOptionsWrapper, cvSearch, cvWrapper } from './select'
+import Searcher from '../searcher/Searcher.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -173,22 +174,24 @@ function isSelected(option: U) {
       :id="idOptions"
       :anchor="idLabel"
       @toggle="onToggle"
-      @mousedown.prevent
     >
-      <div
-        v-for="(option, i) in filteredOptions"
-        :class="cvOptionsWrapper()"
-        :key="i"
-        @click="selectOption(option)"
-      >
-        {{ option.label }}
-        <template v-if="isMultiple">
-          <IconSquareRoundedCheckFilled v-if="option.selected" :class="cvIconSelected()" width="24" />
-          <IconSquareRounded v-else :class="cvIconSelected()" width="24" stroke-width="1" />
-        </template>
-        <template v-else>
-          <IconCheck v-if="option.selected" :class="cvIconSelected()" width="20" stroke-width="2" />
-        </template>
+      <Searcher class="b:gray-10 bb:1" />
+      <div class="p:6">
+        <div
+          v-for="(option, i) in filteredOptions"
+          :class="cvOptionsWrapper()"
+          :key="i"
+          @click="selectOption(option)"
+        >
+          {{ option.label }}
+          <template v-if="isMultiple">
+            <IconSquareRoundedCheckFilled v-if="option.selected" :class="cvIconSelected()" width="24" />
+            <IconSquareRounded v-else :class="cvIconSelected()" width="24" stroke-width="1" />
+          </template>
+          <template v-else>
+            <IconCheck v-if="option.selected" :class="cvIconSelected()" width="20" stroke-width="2" />
+          </template>
+        </div>
       </div>
     </Datalist>
   </div>
@@ -201,5 +204,6 @@ function isSelected(option: U) {
   bottom: auto;
   left: anchor(left);
   margin: 0;
+  padding: 0;
 }
 </style>
