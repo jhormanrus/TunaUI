@@ -1,9 +1,9 @@
 import { existsSync } from 'node:fs'
+import { styleText } from 'node:util'
 import * as p from '@clack/prompts'
-import color from 'picocolors'
 
 export function printIntro(): void {
-  p.intro(`${color.bgMagenta(color.bold(color.black(' Lidia UI ')))}`)
+  p.intro(`${styleText('bgMagenta', styleText('bold', ' Lidia UI '))}`)
 }
 
 export function onCancel(): void {

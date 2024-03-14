@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { styleText } from 'node:util'
 import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
@@ -10,7 +11,6 @@ import type {
 } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
-import color from 'picocolors'
 import {
   type Input,
   array,
@@ -61,7 +61,8 @@ export const add = new Command()
 
       if (!config) {
         p.cancel(
-          `Configuration is missing. Please run ${color.green(
+          `Configuration is missing. Please run ${styleText(
+            'green',
             'init',
           )} to create a components.json file.`,
         )
@@ -79,7 +80,7 @@ export const add = new Command()
 
       await runAdd(cwd, config, options, payload)
 
-      p.outro(`${color.green('Success!')} Components installed.`)
+      p.outro(`${styleText('green', 'Success!')} Components installed.`)
     } catch (error) {
       handleError(error)
     }
@@ -133,7 +134,7 @@ async function runAdd(
       if (!overwrite) continue
     } else {
       addComponentSpinner.start(
-        `Installing component ${color.yellow(item.name)}`,
+        `Installing component ${styleText('yellow', item.name)}`,
       )
     }
 
@@ -148,7 +149,9 @@ async function runAdd(
       await proc.exited
     }
 
-    addComponentSpinner.stop(`Installed component ${color.yellow(item.name)}.`)
+    addComponentSpinner.stop(
+      `Installed component ${styleText('yellow', item.name)}.`,
+    )
   }
 }
 
@@ -160,9 +163,13 @@ async function promptForOverwrite(
     initialValue: false,
   })
 
-  addComponentSpinner.start(`Installing component ${color.yellow(item.name)}`)
+  addComponentSpinner.start(
+    `Installing component ${styleText('yellow', item.name)}`,
+  )
   if (!overwrite) {
-    addComponentSpinner.stop(`Skipped component ${color.yellow(item.name)}.`)
+    addComponentSpinner.stop(
+      `Skipped component ${styleText('yellow', item.name)}.`,
+    )
   }
 
   return overwrite

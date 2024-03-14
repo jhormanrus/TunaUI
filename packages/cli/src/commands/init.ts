@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { styleText } from 'node:util'
 import {
   type Config,
   DEFAULT_COMPONENTS,
@@ -14,7 +15,6 @@ import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
 import { getMastercssConfig } from '@/utils/registry'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
-import color from 'picocolors'
 import { boolean, object, parse, string } from 'valibot'
 
 const PROJECT_DEPENDENCIES = ['class-variant']
@@ -50,7 +50,7 @@ export const init = new Command()
       await runInit(cwd, config)
 
       projectInitSpinner.stop('Installed dependencies')
-      p.outro(`${color.green('Success!')} Initialization completed.`)
+      p.outro(`${styleText('green', 'Success!')} Initialization completed.`)
     } catch (error) {
       handleError(error)
     }
@@ -61,7 +61,7 @@ async function promptForConfig(
   defaultConfig: Config | null = null,
   skip = false,
 ): Promise<Config> {
-  const highlight = (text: string): string => color.yellow(text)
+  const highlight = (text: string): string => styleText('yellow', text)
 
   const options = await p.group(
     {

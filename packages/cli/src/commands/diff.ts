@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { styleText } from 'node:util'
 import { type Config, getConfig } from '@/utils/get-config'
 import { handleError } from '@/utils/handle-error'
 import { printIntro, validateCwd } from '@/utils/prompt'
@@ -8,7 +9,6 @@ import type { RegistryIndexSchema } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { $ } from 'bun'
 import { Command } from 'commander'
-import color from 'picocolors'
 import { type Input, boolean, object, optional, parse, string } from 'valibot'
 
 const UpdateOptionsSchema = object({
@@ -44,7 +44,8 @@ export const diff = new Command()
 
       if (!config) {
         p.cancel(
-          `Configuration is missing. Please run ${color.green(
+          `Configuration is missing. Please run ${styleText(
+            'green',
             'init',
           )} to create a components.json file.`,
         )
@@ -62,7 +63,10 @@ export const diff = new Command()
 
       if (!component) {
         p.cancel(
-          `The component ${color.yellow(options.component)} does not exist.`,
+          `The component ${styleText(
+            'yellow',
+            options.component,
+          )} does not exist.`,
         )
         process.exit(1)
       }
@@ -70,7 +74,9 @@ export const diff = new Command()
       const changes = await diffComponent(component, config)
 
       if (!changes.length) {
-        p.outro(`No updates found for ${color.yellow(options.component)}.`)
+        p.outro(
+          `No updates found for ${styleText('yellow', options.component)}.`,
+        )
         process.exit(0)
       }
 
@@ -121,7 +127,7 @@ async function diffAll(
 
   const filePaths = componentsWithUpdates
     .map((component, i) => {
-      const componentName = color.yellow(component.name)
+      const componentName = styleText('yellow', component.name)
       const filesPath = component.changes
         .map((change) => change.filePath)
         .join('\n')
@@ -130,7 +136,7 @@ async function diffAll(
     .join('\n\n')
 
   p.note(filePaths, 'The following components have updates available:')
-  p.outro(`Run ${color.green('diff <component>')} to see the changes.`)
+  p.outro(`Run ${styleText('green', 'diff <component>')} to see the changes.`)
   process.exit(0)
 }
 
