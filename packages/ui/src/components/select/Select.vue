@@ -1,13 +1,13 @@
 <script setup lang="ts" generic="U extends Record<string, any>">
 import { computed, ref } from 'vue'
-import Input from '../input/Input.vue'
 import IconChevronDown from '../icon/IconChevronDown.vue'
-import Datalist from '../datalist/Datalist.vue'
 import IconCheck from '../icon/IconCheck.vue'
 import IconSquareRounded from '../icon/IconSquareRounded.vue'
 import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
 import { cvIconChevron, cvIconSelected, cvOptionsWrapper, cvSearch, cvWrapper } from './select'
 import Searcher from '../searcher/Searcher.vue'
+import Card from '../card/Card.vue'
+import Wrapper from '../input/Wrapper.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -154,28 +154,21 @@ function isSelected(option: U) {
 
 <template>
   <div ref="selectWrapper" :class="cvWrapper()">
-    <Input
-      v-model="textValue"
-      :class="cvSearch()"
-      :id-label="idLabel"
-      :label="label"
-      :placeholder="internalPlaceholder"
-      :size="size"
-      :readonly="!search"
-      :popovertarget="idOptions"
-      @click="showPopover"
-    >
+    <Wrapper :class="cvSearch()" :id-label="idLabel" :label="label" :size="size" :popovertarget="idOptions" @click="showPopover">
+      <div class="h:22 flex ai:center">
+        {{ textValue }}
+      </div>
       <template #right-aside>
         <IconChevronDown :class="cvIconChevron({ size })" stroke-width="2" />
       </template>
-    </Input>
-    <Datalist
+    </Wrapper>
+    <Card
       popover
       :id="idOptions"
       :anchor="idLabel"
       @toggle="onToggle"
     >
-      <Searcher class="b:gray-10 bb:1" />
+      <Searcher v-if="search" v-model="textValue" class="b:gray-10 bb:1" />
       <div class="p:6">
         <div
           v-for="(option, i) in filteredOptions"
@@ -193,14 +186,14 @@ function isSelected(option: U) {
           </template>
         </div>
       </div>
-    </Datalist>
+    </Card>
   </div>
 </template>
 
 <style scoped>
 [popover] {
   width: anchor-size(width);
-  top: calc(anchor(auto) + 12px);
+  top: calc(anchor(auto) + 9px);
   bottom: auto;
   left: anchor(left);
   margin: 0;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { withDefaults } from 'vue'
-import { cvInput, cvInputWrapper, cvLabel, cvWrapper } from './textarea'
+import { cvInput } from './textarea'
+import Wrapper from '../input/Wrapper.vue';
 
 export type TextAreaValue =
   | string
@@ -36,19 +37,17 @@ const [value, modifiers] = defineModel<TextAreaValue>({
 </script>
 
 <template>
-  <label :class="cvWrapper({ size })">
-    <div :class="cvInputWrapper({ size })">
-      <span :class="cvLabel({ size })">
-        {{ label }}
-      </span>
-      <textarea
-        v-model="value"
-        :class="cvInput({ size })"
-        :id="id"
-        :placeholder="placeholder"
-        :rows="rows"
-        :required="required"
-      ></textarea>
-    </div>
-  </label>
+  <Wrapper
+    :label
+    :size
+  >
+    <textarea
+      v-model="value"
+      :class="cvInput({ size })"
+      :id
+      :placeholder
+      :rows
+      :required
+    ></textarea>
+  </Wrapper>
 </template>
