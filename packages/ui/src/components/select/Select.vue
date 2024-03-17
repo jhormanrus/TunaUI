@@ -154,7 +154,14 @@ function isSelected(option: U) {
 
 <template>
   <div ref="selectWrapper" :class="cvWrapper()">
-    <Wrapper :class="cvSearch()" :id-label="idLabel" :label="label" :size="size" :popovertarget="idOptions" @click="showPopover">
+    <Wrapper
+      :class="cvSearch()"
+      :id-label
+      :label
+      :size
+      :popovertarget="idOptions"
+      @click="showPopover"
+    >
       <div class="h:22 flex ai:center">
         {{ textValue }}
       </div>

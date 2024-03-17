@@ -19,7 +19,7 @@ const options = ref([
   <Story :layout="{ type: 'grid', width: 240 }" auto-props-disabled>
     <Variant title="primary">
       {{ value }}
-      <Select v-model="value" label="Label" size="sm" :options="options" :placeholder="placeholder" :bind-value="bindValue" />
+      <Select v-model="value" label="Label" size="sm" :options :placeholder :bind-value />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -29,7 +29,7 @@ const options = ref([
     </Variant>
 
     <Variant title="secondary">
-      <Select v-model="value" label="Label" search :options="options" :placeholder="placeholder" :bind-value="bindValue" />
+      <Select v-model="value" label="Label" search :options :placeholder :bind-value />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -39,7 +39,7 @@ const options = ref([
     </Variant>
 
     <Variant title="destructive">
-      <Select v-model="value" label="Label" size="lg" :options="options" :placeholder="placeholder" :bind-value="bindValue" />
+      <Select v-model="value" label="Label" size="lg" :options :placeholder :bind-value />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />

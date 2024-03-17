@@ -9,7 +9,7 @@ const placeholder = ref()
 <template>
   <Story :layout="{ type: 'grid', width: 240 }" auto-props-disabled>
     <Variant title="primary">
-      <Input v-model.null="value" label="Label" size="sm" :placeholder="placeholder" />
+      <Input v-model.null="value" label="Label" size="sm" :placeholder />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -17,7 +17,7 @@ const placeholder = ref()
     </Variant>
 
     <Variant title="secondary">
-      <Input v-model.null="value" label="Label" required :placeholder="placeholder" />
+      <Input v-model.null="value" label="Label" required :placeholder />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />
@@ -25,7 +25,7 @@ const placeholder = ref()
     </Variant>
 
     <Variant title="destructive">
-      <Input v-model.null="value" label="Label" size="lg" :placeholder="placeholder" />
+      <Input v-model.null="value" label="Label" size="lg" :placeholder />
       <template #controls>
         <HstText v-model="value" title="v-model" />
         <HstText v-model="placeholder" title="placeholder" />

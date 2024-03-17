@@ -118,7 +118,7 @@ const icons = [
   <Story :layout="{ type: 'grid', width: 100 }">
     <template v-for="icon in icons" :key="icon.name">
       <Variant :title="icon.name">
-        <component :is="icon.component" :width="width" :height="height" />
+        <component :is="icon.component" :width :height />
       </Variant>
     </template>
     <template #controls>

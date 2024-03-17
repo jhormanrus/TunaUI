@@ -9,13 +9,13 @@
     "story:preview": "histoire preview"
   },
   "devDependencies": {
-    "@histoire/plugin-svelte": "^0.17.9",
-    "@histoire/plugin-vue": "^0.17.13",
+    "@histoire/plugin-svelte": "^0.17.14",
+    "@histoire/plugin-vue": "^0.17.14",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@tsconfig/svelte": "^5.0.2",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/tsconfig": "^0.5.1",
-    "histoire": "^0.17.9",
+    "histoire": "^0.17.14",
     "tslib": "^2.6.2",
     "vite": "^5.1.6"
   },
