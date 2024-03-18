@@ -100,9 +100,8 @@ const internalPlaceholder = computed(() =>
 )
 const isMultiple = computed(() => Array.isArray(props.modelValue))
 
-const id = Math.random().toString(36).substring(7)
-const idLabel = `select-label-${id}`
-const idOptions = `select-options-${id}`
+const idLabel = crypto.randomUUID()
+const idOptions = crypto.randomUUID()
 
 function showPopover() {
   (selectWrapper.value?.lastElementChild as HTMLElement).showPopover()
