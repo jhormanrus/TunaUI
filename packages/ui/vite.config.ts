@@ -14,6 +14,7 @@ export default defineConfig({
   histoire: {
     plugins: [HstSvelte(), HstVue()],
     setupFile: '/src/histoire-setup.ts',
+    routerMode: 'hash',
     theme: {
       title: 'Lidia UI',
     },
