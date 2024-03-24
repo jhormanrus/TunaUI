@@ -18,11 +18,13 @@ withDefaults(
     label?: string
     placeholder?: string
     required?: boolean
+    autoresize?: boolean
   }>(),
   {
     rows: 3,
     size: 'md',
     placeholder: '',
+    autoresize: false,
   },
 )
 
@@ -43,7 +45,7 @@ const [value, modifiers] = defineModel<TextAreaValue>({
   >
     <textarea
       v-model="value"
-      :class="cvInput({ size })"
+      :class="cvInput({ size, autoresize })"
       :id
       :placeholder
       :rows
