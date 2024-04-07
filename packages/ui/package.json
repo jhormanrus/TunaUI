@@ -9,15 +9,15 @@
     "story:preview": "histoire preview"
   },
   "devDependencies": {
-    "@histoire/plugin-svelte": "^0.17.14",
-    "@histoire/plugin-vue": "^0.17.14",
-    "@sveltejs/vite-plugin-svelte": "^3.0.2",
-    "@tsconfig/svelte": "^5.0.2",
+    "@histoire/plugin-svelte": "^0.17.17",
+    "@histoire/plugin-vue": "^0.17.17",
+    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "@tsconfig/svelte": "^5.0.4",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/tsconfig": "^0.5.1",
-    "histoire": "^0.17.14",
+    "histoire": "^0.17.17",
     "tslib": "^2.6.2",
-    "vite": "^5.1.6"
+    "vite": "^5.2.8"
   },
   "dependencies": {
     "@master/css-runtime": "rc",
