@@ -170,6 +170,7 @@ function isSelected(option: U) {
     </Wrapper>
     <Card
       popover
+      class="{position-fallback:--bottom-to-top} w:anchor-size(width) p:0"
       :id="idOptions"
       :anchor="idLabel"
       @toggle="onToggle"
@@ -197,12 +198,14 @@ function isSelected(option: U) {
 </template>
 
 <style scoped>
-[popover] {
-  width: anchor-size(width);
-  top: calc(anchor(auto) + 9px);
-  bottom: auto;
-  left: anchor(left);
-  margin: 0;
-  padding: 0;
+@position-fallback --bottom-to-top {
+  @try {
+    top: calc(anchor(bottom) + 9px);
+    left: anchor(left);
+  }
+  @try {
+    bottom: calc(anchor(top) + 9px);
+    left: anchor(left);
+  }
 }
 </style>
