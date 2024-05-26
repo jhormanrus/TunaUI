@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { withDefaults } from 'vue'
+import Wrapper from '../input/Wrapper.vue'
 import { cvInput } from './textarea'
-import Wrapper from '../input/Wrapper.vue';
 
 export type TextAreaValue =
   | string

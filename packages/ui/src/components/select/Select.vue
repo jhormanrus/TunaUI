@@ -1,13 +1,19 @@
 <script setup lang="ts" generic="U extends Record<string, any>">
 import { computed, ref } from 'vue'
-import IconChevronDown from '../icon/IconChevronDown.vue'
+import Card from '../card/Card.vue'
 import IconCheck from '../icon/IconCheck.vue'
+import IconChevronDown from '../icon/IconChevronDown.vue'
 import IconSquareRounded from '../icon/IconSquareRounded.vue'
 import IconSquareRoundedCheckFilled from '../icon/IconSquareRoundedCheckFilled.vue'
-import { cvIconChevron, cvIconSelected, cvOptionsWrapper, cvSearch, cvWrapper } from './select'
-import Searcher from '../searcher/Searcher.vue'
-import Card from '../card/Card.vue'
 import Wrapper from '../input/Wrapper.vue'
+import Searcher from '../searcher/Searcher.vue'
+import {
+  cvIconChevron,
+  cvIconSelected,
+  cvOptionsWrapper,
+  cvSearch,
+  cvWrapper,
+} from './select'
 
 const props = withDefaults(
   defineProps<{
@@ -23,11 +29,14 @@ const props = withDefaults(
   {
     size: 'md',
     bindLabel: 'label',
-  }
+  },
 )
-const emit = defineEmits<(e: 'update:modelValue', value?: U | U[]) => undefined>()
+const emit =
+  defineEmits<(e: 'update:modelValue', value?: U | U[]) => undefined>()
 
-const value = computed<string | number | U | string[] | number[] | U[] | undefined>({
+const value = computed<
+  string | number | U | string[] | number[] | U[] | undefined
+>({
   get() {
     // if (props.bindValue) {
     //   return Array.isArray(props.modelValue)
@@ -38,24 +47,29 @@ const value = computed<string | number | U | string[] | number[] | U[] | undefin
     // }
     if (Array.isArray(props.modelValue)) {
       return props.bindValue
-        ? props.modelValue.map(v => props.options.find(o => o[props.bindValue!] === v) ?? v) as string[] | number[] | U[]
-        : props.modelValue.map(v => props.options.find(o => o === v) ?? v) as string[] | number[] | U[]
-    } else {
-      return props.bindValue
-        ? props.options.find(o => o[props.bindValue!] === props.modelValue)
-        : props.modelValue
+        ? (props.modelValue.map(
+            (v) => props.options.find((o) => o[props.bindValue] === v) ?? v,
+          ) as string[] | number[] | U[])
+        : (props.modelValue.map(
+            (v) => props.options.find((o) => o === v) ?? v,
+          ) as string[] | number[] | U[])
     }
+    return props.bindValue
+      ? props.options.find((o) => o[props.bindValue] === props.modelValue)
+      : props.modelValue
   },
   set(value) {
     emit(
       'update:modelValue',
       props.bindValue
         ? Array.isArray(value)
-          ? value.map(v => (props.bindValue && typeof v === 'object' ? v[props.bindValue] : v))
+          ? value.map((v) =>
+              props.bindValue && typeof v === 'object' ? v[props.bindValue] : v,
+            )
           : value instanceof Object && value[props.bindValue]
-        : value
+        : value,
     )
-  }
+  },
 })
 
 const selectWrapper = ref<HTMLElement>()
@@ -63,40 +77,48 @@ const open = ref(false)
 const searchQuery = ref('')
 
 const filteredOptions = computed(() => {
-  const selectedOptions = props.options.map(option => ({
+  const selectedOptions = props.options.map((option) => ({
     ...option,
-    selected: isSelected(option)
+    selected: isSelected(option),
   }))
   if (searchQuery.value.length > 0) {
-    return selectedOptions.filter(option => {
+    return selectedOptions.filter((option) => {
       const normalizedKey = normalizeWord(option[props.bindLabel].toLowerCase())
       const normalizedQuery = normalizeWord(searchQuery.value.toLowerCase())
       const arrayQuery = normalizedQuery.split(/\s+/)
-      return arrayQuery.every(word => normalizedKey.includes(word))
+      return arrayQuery.every((word) => normalizedKey.includes(word))
     })
   }
   return selectedOptions
 })
 const formattedValue = computed<string>(() => {
-  if (!value.value) return ''
+  if (!value.value) {
+    return ''
+  }
   if (Array.isArray(value.value)) {
     return value.value
-      .reduce((list, element) => list.concat((element as U)[props.bindLabel]?? element), [])
+      .reduce(
+        (list, element) =>
+          list.concat((element as U)[props.bindLabel] ?? element),
+        [],
+      )
       .join(', ')
   }
-  return (value.value as U)[props.bindLabel]?? value.value
+  return (value.value as U)[props.bindLabel] ?? value.value
 })
 const textValue = computed({
   get: () => {
-    if (props.search && open.value) return searchQuery.value
+    if (props.search && open.value) {
+      return searchQuery.value
+    }
     return formattedValue.value
   },
-  set: value => {
+  set: (value) => {
     searchQuery.value = value
-  }
+  },
 })
 const internalPlaceholder = computed(() =>
-  props.search && open.value ? formattedValue.value : props.placeholder
+  props.search && open.value ? formattedValue.value : props.placeholder,
 )
 const isMultiple = computed(() => Array.isArray(props.modelValue))
 
@@ -104,12 +126,12 @@ const idLabel = crypto.randomUUID()
 const idOptions = crypto.randomUUID()
 
 function showPopover() {
-  (selectWrapper.value?.lastElementChild as HTMLElement).showPopover()
+  ;(selectWrapper.value?.lastElementChild as HTMLElement).showPopover()
   open.value = true
 }
 
 function hidePopover() {
-  (selectWrapper.value?.lastElementChild as HTMLElement).hidePopover()
+  ;(selectWrapper.value?.lastElementChild as HTMLElement).hidePopover()
   open.value = false
 }
 
@@ -121,10 +143,13 @@ function selectOption(option: U) {
   searchQuery.value = ''
   if (Array.isArray(value.value)) {
     const opIndex = value.value
-      .map(o => (props.bindValue ? (o as U)[props.bindValue] : o))
+      .map((o) => (props.bindValue ? (o as U)[props.bindValue] : o))
       .indexOf(props.bindValue ? option[props.bindValue] : option)
     if (opIndex >= 0) {
-      value.value = value.value.filter((_, i) => i !== opIndex) as string[] | number[] | U[]
+      value.value = value.value.filter((_, i) => i !== opIndex) as
+        | string[]
+        | number[]
+        | U[]
     } else {
       value.value = value.value.concat(option) as string[] | number[] | U[]
     }
@@ -144,7 +169,9 @@ function normalizeWord(word: string) {
 function isSelected(option: U) {
   if (Array.isArray(value.value)) {
     return props.bindValue
-      ? value.value.some(o => (o as U)[props.bindValue!] === option[props.bindValue!])
+      ? value.value.some(
+          (o) => (o as U)[props.bindValue] === option[props.bindValue],
+        )
       : (value.value as U[]).includes(option)
   }
   return value.value === (props.bindValue ? option[props.bindValue] : option)

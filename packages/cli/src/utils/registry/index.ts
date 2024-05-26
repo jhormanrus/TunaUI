@@ -37,7 +37,9 @@ export async function resolveTree(
   for (const name of names) {
     const entry = index.find((entry) => entry.name === name)
 
-    if (!entry) continue
+    if (!entry) {
+      continue
+    }
 
     tree.add(entry)
 
@@ -77,13 +79,15 @@ async function fetchFromSource(paths: string[], text = false) {
     const results = await Promise.all(
       paths.map(async (path) => {
         const response = await fetch(`${sourceUrl}/${path}`)
-        if (text) return await response.text()
+        if (text) {
+          return await response.text()
+        }
         return await response.json()
       }),
     )
 
     return results
-  } catch (error) {
+  } catch {
     throw new Error(`Failed to fetch component from ${sourceUrl}.`)
   }
 }

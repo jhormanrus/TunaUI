@@ -75,7 +75,9 @@ export const add = new Command()
         const proceed = await p.confirm({
           message: 'Ready to install components and dependencies. Proceed?',
         })
-        if (!proceed) onCancel()
+        if (!proceed) {
+          onCancel()
+        }
       }
 
       await runAdd(cwd, config, options, payload)
@@ -103,7 +105,9 @@ async function promptToSelectComponents(
         label: entry.name,
       })),
     })
-    if (p.isCancel(components)) onCancel()
+    if (p.isCancel(components)) {
+      onCancel()
+    }
     selectedComponents = parse(array(string()), components)
   }
 
@@ -131,7 +135,9 @@ async function runAdd(
 
     if (existingComponent.length && !options.overwrite) {
       const overwrite = await promptForOverwrite(item)
-      if (!overwrite) continue
+      if (!overwrite) {
+        continue
+      }
     } else {
       addComponentSpinner.start(
         `Installing component ${styleText('yellow', item.name)}`,

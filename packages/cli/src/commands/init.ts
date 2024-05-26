@@ -121,7 +121,9 @@ async function promptForConfig(
         'components.json',
       )}. Proceed?`,
     })
-    if (!proceed) onCancel()
+    if (!proceed) {
+      onCancel()
+    }
   }
 
   projectInitSpinner.start(`Writing ${highlight('components.json')}`)

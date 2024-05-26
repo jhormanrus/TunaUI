@@ -7,7 +7,7 @@ withDefaults(
   }>(),
   {
     placeholder: 'Search',
-  }
+  },
 )
 
 const value = defineModel<T>()

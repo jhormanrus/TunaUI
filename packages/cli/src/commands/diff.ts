@@ -12,7 +12,7 @@ import { Command } from 'commander'
 import { type Input, boolean, object, optional, parse, string } from 'valibot'
 
 const UpdateOptionsSchema = object({
-  component: optional(string()),
+  component: string(),
   yes: boolean(),
   cwd: string(),
   path: optional(string()),
@@ -54,7 +54,9 @@ export const diff = new Command()
 
       const registryIndex = await getRegistryIndex()
 
-      if (!options.component) await diffAll(config, registryIndex)
+      if (!options.component) {
+        await diffAll(config, registryIndex)
+      }
 
       // Show diff for a single component.
       const component = registryIndex.find(
@@ -126,7 +128,7 @@ async function diffAll(
   }
 
   const filePaths = componentsWithUpdates
-    .map((component, i) => {
+    .map(component => {
       const componentName = styleText('yellow', component.name)
       const filesPath = component.changes
         .map((change) => change.filePath)
