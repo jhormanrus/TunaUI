@@ -1,25 +1,25 @@
-import { array, merge, object, optional, picklist, string } from 'valibot'
+import * as v from 'valibot'
 
-export const RegistryItemSchema = object({
-  name: string(),
-  dependencies: optional(array(string())),
-  registryDependencies: optional(array(string())),
-  files: array(string()),
+export const RegistryItemSchema = v.object({
+  name: v.string(),
+  dependencies: v.optional(v.array(v.string())),
+  registryDependencies: v.optional(v.array(v.string())),
+  files: v.array(v.string()),
 })
 
-export const RegistryIndexSchema = array(RegistryItemSchema)
+export const RegistryIndexSchema = v.array(RegistryItemSchema)
 
-export const RegistryItemWithContentSchema = merge([
-  RegistryItemSchema,
-  object({
-    files: array(
-      object({
-        name: string(),
-        type: picklist(['components', 'utils']),
-        content: string(),
+export const RegistryItemWithContentSchema = v.object({
+  ...RegistryItemSchema.entries,
+  ...v.object({
+    files: v.array(
+      v.object({
+        name: v.string(),
+        type: v.picklist(['components', 'utils']),
+        content: v.string(),
       }),
     ),
-  }),
-])
+  }).entries,
+})
 
-export const RegistryWithContentSchema = array(RegistryItemWithContentSchema)
+export const RegistryWithContentSchema = v.array(RegistryItemWithContentSchema)

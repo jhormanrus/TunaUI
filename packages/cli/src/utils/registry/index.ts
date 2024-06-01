@@ -3,7 +3,7 @@ import {
   type RegistryItemSchema,
   RegistryWithContentSchema,
 } from '@/utils/registry/schema'
-import { type Input, type SetInput, parse, string } from 'valibot'
+import * as v from 'valibot'
 
 export const sourceUrl =
   'https://raw.githubusercontent.com/jhormanrus/LidiaUI/main/packages/ui'
@@ -11,28 +11,28 @@ export const sourceUrl =
 export async function getMastercssConfig(): Promise<string> {
   try {
     const [result] = await fetchFromSource(['master.css.ts'], true)
-    return parse(string(), result)
+    return v.parse(v.string(), result)
   } catch {
     throw new Error('Failed to fetch master.css.ts from registry.')
   }
 }
 
 export async function getRegistryIndex(): Promise<
-  Input<typeof RegistryIndexSchema>
+  v.InferInput<typeof RegistryIndexSchema>
 > {
   try {
     const [result] = await fetchFromSource(['registry.json'])
-    return parse(RegistryIndexSchema, result)
+    return v.parse(RegistryIndexSchema, result)
   } catch {
     throw new Error('Failed to fetch components from registry.')
   }
 }
 
 export async function resolveTree(
-  index: Input<typeof RegistryIndexSchema>,
+  index: v.InferInput<typeof RegistryIndexSchema>,
   names: string[],
-): Promise<Input<typeof RegistryIndexSchema>> {
-  const tree: SetInput<typeof RegistryItemSchema> = new Set()
+): Promise<v.InferInput<typeof RegistryIndexSchema>> {
+  const tree: v.InferSetInput<typeof RegistryItemSchema> = new Set()
 
   for (const name of names) {
     const entry = index.find((entry) => entry.name === name)
@@ -55,8 +55,8 @@ export async function resolveTree(
 }
 
 export async function fetchTree(
-  tree: Input<typeof RegistryIndexSchema>,
-): Promise<Input<typeof RegistryWithContentSchema>> {
+  tree: v.InferInput<typeof RegistryIndexSchema>,
+): Promise<v.InferInput<typeof RegistryWithContentSchema>> {
   try {
     const paths = tree.map((item) => item.files)
     const result = await fetchFromSource(paths.flat(), true)
@@ -68,7 +68,7 @@ export async function fetchTree(
         content: result[index],
       })),
     }))
-    return parse(RegistryWithContentSchema, registryWithContent)
+    return v.parse(RegistryWithContentSchema, registryWithContent)
   } catch {
     throw new Error('Failed to fetch tree from registry.')
   }

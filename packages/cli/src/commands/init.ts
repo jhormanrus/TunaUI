@@ -15,13 +15,13 @@ import { onCancel, printIntro, validateCwd } from '@/utils/prompt'
 import { getMastercssConfig } from '@/utils/registry'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
-import { boolean, object, parse, string } from 'valibot'
+import * as v from 'valibot'
 
 const PROJECT_DEPENDENCIES = ['class-variant']
 
-const InitOptionsSchema = object({
-  cwd: string(),
-  yes: boolean(),
+const InitOptionsSchema = v.object({
+  cwd: v.string(),
+  yes: v.boolean(),
 })
 
 const projectInitSpinner = p.spinner()
@@ -39,7 +39,7 @@ export const init = new Command()
     try {
       printIntro()
 
-      const options = parse(InitOptionsSchema, opts)
+      const options = v.parse(InitOptionsSchema, opts)
       const cwd = path.resolve(options.cwd)
 
       validateCwd(cwd)
@@ -102,7 +102,7 @@ async function promptForConfig(
     { onCancel },
   )
 
-  const config = parse(RawConfigSchema, {
+  const config = v.parse(RawConfigSchema, {
     $schema: 'https://lidia-ui.vercel.app/schema.json',
     globalCss: options.globalCss,
     mastercss: {

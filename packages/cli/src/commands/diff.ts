@@ -9,13 +9,13 @@ import type { RegistryIndexSchema } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { $ } from 'bun'
 import { Command } from 'commander'
-import { type Input, boolean, object, optional, parse, string } from 'valibot'
+import * as v from 'valibot'
 
-const UpdateOptionsSchema = object({
-  component: string(),
-  yes: boolean(),
-  cwd: string(),
-  path: optional(string()),
+const UpdateOptionsSchema = v.object({
+  component: v.string(),
+  yes: v.boolean(),
+  cwd: v.string(),
+  path: v.optional(v.string()),
 })
 
 export const diff = new Command()
@@ -32,7 +32,7 @@ export const diff = new Command()
     try {
       printIntro()
 
-      const options = parse(UpdateOptionsSchema, {
+      const options = v.parse(UpdateOptionsSchema, {
         component: name,
         ...opts,
       })
@@ -94,7 +94,7 @@ export const diff = new Command()
 
 async function diffAll(
   config: Config,
-  registryIndex: Input<typeof RegistryIndexSchema>,
+  registryIndex: v.InferInput<typeof RegistryIndexSchema>,
 ) {
   const targetDir = config.resolvedPaths.components
 
@@ -143,7 +143,7 @@ async function diffAll(
 }
 
 async function diffComponent(
-  component: Input<typeof RegistryIndexSchema>[number],
+  component: v.InferInput<typeof RegistryIndexSchema>[number],
   config: Config,
 ) {
   const payload = await fetchTree([component])

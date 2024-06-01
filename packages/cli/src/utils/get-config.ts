@@ -2,18 +2,7 @@ import path from 'node:path'
 import { resolveImport } from '@/utils/resolve-import'
 import { lilconfig } from 'lilconfig'
 import { loadConfig } from 'tsconfig-paths'
-import {
-  type Input,
-  boolean,
-  coerce,
-  fallback,
-  merge,
-  never,
-  object,
-  optional,
-  parse,
-  string,
-} from 'valibot'
+import * as v from 'valibot'
 
 export const DEFAULT_COMPONENTS = '@/components'
 export const DEFAULT_UTILS = '@/utils'
@@ -24,37 +13,36 @@ const explorer = lilconfig('components', {
   searchPlaces: ['components.json'],
 })
 
-export const RawConfigSchema = object(
+export const RawConfigSchema = v.strictObject(
   {
-    $schema: optional(string()),
-    typescript: coerce(fallback(boolean(), true), Boolean),
-    globalCss: string(),
-    mastercss: object({
-      config: string(),
+    $schema: v.optional(v.string()),
+    typescript: v.pipe(v.fallback(v.boolean(), true), v.transform(input => Boolean(input))),
+    globalCss: v.string(),
+    mastercss: v.object({
+      config: v.string(),
     }),
-    aliases: object({
-      components: string(),
-      utils: string(),
+    aliases: v.object({
+      components: v.string(),
+      utils: v.string(),
     }),
-  },
-  never(),
+  }
 )
 
-export type RawConfig = Input<typeof RawConfigSchema>
+export type RawConfig = v.InferInput<typeof RawConfigSchema>
 
-export const ConfigSchema = merge([
-  RawConfigSchema,
-  object({
-    resolvedPaths: object({
-      mastercssConfig: string(),
-      globalCss: string(),
-      components: string(),
-      utils: string(),
+export const ConfigSchema = v.object({
+  ...RawConfigSchema.entries,
+  ...v.object({
+    resolvedPaths: v.object({
+      mastercssConfig: v.string(),
+      globalCss: v.string(),
+      components: v.string(),
+      utils: v.string(),
     }),
-  }),
-])
+  }).entries,
+})
 
-export type Config = Input<typeof ConfigSchema>
+export type Config = v.InferInput<typeof ConfigSchema>
 
 export async function getConfig(cwd: string): Promise<Config | null> {
   const config = await getRawConfig(cwd)
@@ -79,7 +67,7 @@ export async function resolveConfigPaths(
     )
   }
 
-  return parse(ConfigSchema, {
+  return v.parse(ConfigSchema, {
     ...config,
     resolvedPaths: {
       mastercssConfig: path.resolve(cwd, config.mastercss.config),
@@ -98,7 +86,7 @@ export async function getRawConfig(cwd: string): Promise<RawConfig | null> {
       return null
     }
 
-    return parse(RawConfigSchema, configResult.config)
+    return v.parse(RawConfigSchema, configResult.config)
   } catch {
     throw new Error(`Invalid configuration found in ${cwd}/components.json.`)
   }

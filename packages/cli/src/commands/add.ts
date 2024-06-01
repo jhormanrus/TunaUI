@@ -11,25 +11,17 @@ import type {
 } from '@/utils/registry/schema'
 import * as p from '@clack/prompts'
 import { Command } from 'commander'
-import {
-  type Input,
-  array,
-  boolean,
-  object,
-  optional,
-  parse,
-  string,
-} from 'valibot'
+import * as v from 'valibot'
 
 const addComponentSpinner = p.spinner()
 
-const AddOptionsSchema = object({
-  components: array(string()),
-  yes: boolean(),
-  overwrite: boolean(),
-  cwd: string(),
-  all: boolean(),
-  path: optional(string()),
+const AddOptionsSchema = v.object({
+  components: v.array(v.string()),
+  yes: v.boolean(),
+  overwrite: v.boolean(),
+  cwd: v.string(),
+  all: v.boolean(),
+  path: v.optional(v.string()),
 })
 
 export const add = new Command()
@@ -49,7 +41,7 @@ export const add = new Command()
     try {
       printIntro()
 
-      const options = parse(AddOptionsSchema, {
+      const options = v.parse(AddOptionsSchema, {
         components,
         ...opts,
       })
@@ -89,8 +81,8 @@ export const add = new Command()
   })
 
 async function promptToSelectComponents(
-  options: Input<typeof AddOptionsSchema>,
-): Promise<Input<typeof RegistryWithContentSchema>> {
+  options: v.InferInput<typeof AddOptionsSchema>,
+): Promise<v.InferInput<typeof RegistryWithContentSchema>> {
   const registryIndex = await getRegistryIndex()
 
   let selectedComponents = options.all
@@ -108,7 +100,7 @@ async function promptToSelectComponents(
     if (p.isCancel(components)) {
       onCancel()
     }
-    selectedComponents = parse(array(string()), components)
+    selectedComponents = v.parse(v.array(v.string()), components)
   }
 
   const tree = await resolveTree(registryIndex, selectedComponents)
@@ -125,8 +117,8 @@ async function promptToSelectComponents(
 async function runAdd(
   cwd: string,
   config: Config,
-  options: Input<typeof AddOptionsSchema>,
-  payload: Input<typeof RegistryWithContentSchema>,
+  options: v.InferInput<typeof AddOptionsSchema>,
+  payload: v.InferInput<typeof RegistryWithContentSchema>,
 ): Promise<void> {
   for (const item of payload) {
     const existingComponent = item.files.filter((file) =>
@@ -162,7 +154,7 @@ async function runAdd(
 }
 
 async function promptForOverwrite(
-  item: Input<typeof RegistryItemWithContentSchema>,
+  item: v.InferInput<typeof RegistryItemWithContentSchema>,
 ) {
   const overwrite = await p.confirm({
     message: `Would you like to overwrite component ${item.name}?`,
