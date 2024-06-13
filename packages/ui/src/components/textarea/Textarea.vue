@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { withDefaults } from 'vue'
 import Wrapper from '../input/Wrapper.vue'
 import { cvInput } from './textarea'
 

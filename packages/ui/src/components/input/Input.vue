@@ -1,5 +1,4 @@
 <script setup lang="ts" generic="T">
-import { withDefaults } from 'vue'
 import Wrapper from './Wrapper.vue'
 import { cvInput } from './input'
 
