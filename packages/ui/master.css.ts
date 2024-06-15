@@ -2,7 +2,7 @@ import type { Config } from '@master/css'
 
 const config: Config = {
   styles: {},
-  rules: {},
+  syntaxes: {},
   variables: {
     control: {
       text: '#000',
@@ -15,8 +15,8 @@ const config: Config = {
       },
     },
   },
-  semantics: {},
-  mediaQueries: {},
+  utilities: {},
+  at: {},
   animations: {},
   selectors: {},
   functions: {},
