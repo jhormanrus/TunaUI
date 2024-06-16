@@ -103,7 +103,7 @@ async function promptForConfig(
   )
 
   const config = v.parse(RawConfigSchema, {
-    $schema: 'https://lidia-ui.vercel.app/schema.json',
+    $schema: 'https://lidia.qhar.in/schema.json',
     globalCss: options.globalCss,
     mastercss: {
       config: options.mastercssConfig,
