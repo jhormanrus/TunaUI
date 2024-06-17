@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@master/css-runtime": "rc",
-    "class-variant": "beta"
+    "class-variant": "2.0.2"
   }
 }
