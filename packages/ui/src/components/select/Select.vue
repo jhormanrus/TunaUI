@@ -32,10 +32,13 @@ const props = withDefaults(
   },
 )
 const emit =
-  defineEmits<(e: 'update:modelValue', value?: U | U[]) => undefined>()
+  defineEmits<{
+    (e: 'update:modelValue', value?: U | U[]): undefined
+    (e: 'search', value: string): undefined
+  }>()
 
 const value = computed<
-  string | number | U | string[] | number[] | U[] | undefined
+  string | string[] | number | number[] | U | U[] | undefined
 >({
   get() {
     // if (props.bindValue) {
@@ -76,21 +79,6 @@ const selectWrapper = ref<HTMLElement>()
 const open = ref(false)
 const searchQuery = ref('')
 
-const filteredOptions = computed(() => {
-  const selectedOptions = props.options.map((option) => ({
-    ...option,
-    selected: isSelected(option),
-  }))
-  if (searchQuery.value.length > 0) {
-    return selectedOptions.filter((option) => {
-      const normalizedKey = normalizeWord(option[props.bindLabel].toLowerCase())
-      const normalizedQuery = normalizeWord(searchQuery.value.toLowerCase())
-      const arrayQuery = normalizedQuery.split(/\s+/)
-      return arrayQuery.every((word) => normalizedKey.includes(word))
-    })
-  }
-  return selectedOptions
-})
 const formattedValue = computed<string>(() => {
   if (!value.value) {
     return ''
@@ -115,6 +103,7 @@ const textValue = computed({
   },
   set: (value) => {
     searchQuery.value = value
+    emit('search', value)
   },
 })
 const internalPlaceholder = computed(() =>
@@ -140,7 +129,7 @@ function onToggle(e: ToggleEvent) {
 }
 
 function selectOption(option: U) {
-  searchQuery.value = ''
+  textValue.value = ''
   if (Array.isArray(value.value)) {
     const opIndex = value.value
       .map((o) => (props.bindValue ? (o as U)[props.bindValue] : o))
@@ -157,24 +146,6 @@ function selectOption(option: U) {
     value.value = option
     hidePopover()
   }
-}
-
-function normalizeWord(word: string) {
-  return word
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .normalize('NFC')
-}
-
-function isSelected(option: U) {
-  if (Array.isArray(value.value)) {
-    return props.bindValue
-      ? value.value.some(
-          (o) => (o as U)[props.bindValue] === option[props.bindValue],
-        )
-      : (value.value as U[]).includes(option)
-  }
-  return value.value === (props.bindValue ? option[props.bindValue] : option)
 }
 </script>
 
@@ -205,7 +176,7 @@ function isSelected(option: U) {
       <Searcher v-if="search" v-model="textValue" class="b:gray-10 bb:1" />
       <div class="p:6">
         <div
-          v-for="(option, i) in filteredOptions"
+          v-for="(option, i) in options"
           :class="cvOptionsWrapper()"
           :key="i"
           @click="selectOption(option)"
