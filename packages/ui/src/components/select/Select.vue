@@ -41,13 +41,6 @@ const value = computed<
   string | string[] | number | number[] | U | U[] | undefined
 >({
   get() {
-    // if (props.bindValue) {
-    //   return Array.isArray(props.modelValue)
-    //     ? props.modelValue.map(v => props.options.find(o => props.bindValue ? o[props.bindValue!] === v : o === v) ?? v)
-    //     : props.options.find(o => o[props.bindValue!] === props.modelValue)
-    // } else {
-    //   return props.modelValue
-    // }
     if (Array.isArray(props.modelValue)) {
       return props.bindValue
         ? (props.modelValue.map(
@@ -106,9 +99,6 @@ const textValue = computed({
     emit('search', value)
   },
 })
-const internalPlaceholder = computed(() =>
-  props.search && open.value ? formattedValue.value : props.placeholder,
-)
 const isMultiple = computed(() => Array.isArray(props.modelValue))
 
 const idLabel = crypto.randomUUID()
