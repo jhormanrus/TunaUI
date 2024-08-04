@@ -11,7 +11,6 @@ import {
   cvIconChevron,
   cvIconSelected,
   cvOptionsWrapper,
-  cvSearch,
   cvWrapper,
 } from './select'
 
@@ -142,8 +141,7 @@ function selectOption(option: U) {
 <template>
   <div ref="selectWrapper" :class="cvWrapper()">
     <Wrapper
-      :class="cvSearch()"
-      :id-label
+      :class="[`{anchor-name:--${idLabel}}`]"
       :label
       :size
       :popovertarget="idOptions"
@@ -158,9 +156,9 @@ function selectOption(option: U) {
     </Wrapper>
     <Card
       popover
-      class="{position-fallback:--bottom-to-top} w:anchor-size(width) p:0"
+      class="abs m:0 p:0 w:anchor-size(width) {inset-area:bottom} mt:4"
+      :class="[`{position-anchor:--${idLabel}}`]"
       :id="idOptions"
-      :anchor="idLabel"
       @toggle="onToggle"
     >
       <Searcher v-if="search" v-model="textValue" class="b:gray-10 bb:1" />
@@ -184,16 +182,3 @@ function selectOption(option: U) {
     </Card>
   </div>
 </template>
-
-<style scoped>
-@position-fallback --bottom-to-top {
-  @try {
-    top: calc(anchor(bottom) + 9px);
-    left: anchor(left);
-  }
-  @try {
-    bottom: calc(anchor(top) + 9px);
-    left: anchor(left);
-  }
-}
-</style>
