@@ -3,9 +3,9 @@ import cv from 'class-variant'
 export const cvWrapper = cv(
   `
     flex
-    bg:gray-5 bg:gray-10:has(:not(input:focus-visible):hover)
+    bg:gray-5 bg:gray-10:has(:not(input:focus-visible,textarea:focus-visible):hover)
     transition:background-color|150ms|ease-in,box-shadow|150ms|ease-in
-    $highlight-size:0 $highlight-size:1px:has(input:focus-visible)
+    $highlight-size:0 $highlight-size:1px:has(input:focus-visible,textarea:focus-visible)
     shadow:0|0|0|$(highlight-size)|gray-50,0|0|0|calc($(highlight-size)*5)|gray-50/.2
   `,
   {
