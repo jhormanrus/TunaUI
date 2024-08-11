@@ -17,7 +17,7 @@ export const cvWrapper = cv(
   },
 )
 
-export const cvInputWrapper = cv('rel flex-grow:1', {
+export const cvInputWrapper = cv('rel flex flex-grow:1', {
   size: {
     sm: 'pb:5',
     md: 'pb:8',
