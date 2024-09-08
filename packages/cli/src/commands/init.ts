@@ -19,6 +19,8 @@ import * as v from 'valibot'
 
 const PROJECT_DEPENDENCIES = ['class-variant']
 
+const utilsRegex = /\/utils$/
+
 const InitOptionsSchema = v.object({
   cwd: v.string(),
   yes: v.boolean(),
@@ -149,7 +151,7 @@ async function runInit(cwd: string, config: Config): Promise<void> {
     // TODO: In future releases we should add support for individual utils.
     if (key === 'utils' && resolvedPath.endsWith('/utils')) {
       // Remove /utils at the end.
-      dirname = dirname.replace(/\/utils$/, '')
+      dirname = dirname.replace(utilsRegex, '')
     }
   }
 

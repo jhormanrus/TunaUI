@@ -30,11 +30,10 @@ const props = withDefaults(
     bindLabel: 'label',
   },
 )
-const emit =
-  defineEmits<{
-    (e: 'update:modelValue', value?: U | U[]): undefined
-    (e: 'search', value: string): undefined
-  }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value?: U | U[]): undefined
+  (e: 'search', value: string): undefined
+}>()
 
 const value = computed<
   string | string[] | number | number[] | U | U[] | undefined

@@ -11,9 +11,9 @@
   "devDependencies": {
     "@histoire/plugin-svelte": "^0.17.17",
     "@histoire/plugin-vue": "^0.17.17",
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@tsconfig/svelte": "^5.0.4",
-    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue": "^5.1.3",
     "@vue/tsconfig": "^0.5.1",
     "histoire": "^0.17.17",
     "tslib": "^2.6.3",

@@ -89,7 +89,7 @@ async function promptToSelectComponents(
     ? registryIndex.map((entry) => entry.name)
     : options.components
 
-  if (!(options.components.length || options.all)) {
+  if (!(options.components.length > 0 || options.all)) {
     const components = await p.multiselect({
       message: 'Which components would you like to add?',
       options: registryIndex.map((entry) => ({
@@ -106,7 +106,7 @@ async function promptToSelectComponents(
   const tree = await resolveTree(registryIndex, selectedComponents)
   const payload = await fetchTree(tree)
 
-  if (!payload.length) {
+  if (payload.length === 0) {
     p.cancel('Selected components not found. Exiting.')
     process.exit(0)
   }
@@ -125,7 +125,7 @@ async function runAdd(
       existsSync(path.resolve(config.resolvedPaths[file.type], file.name)),
     )
 
-    if (existingComponent.length && !options.overwrite) {
+    if (existingComponent.length > 0 && !options.overwrite) {
       const overwrite = await promptForOverwrite(item)
       if (!overwrite) {
         continue
@@ -142,7 +142,7 @@ async function runAdd(
     }
 
     // Install dependencies.
-    if (item.dependencies?.length) {
+    if (item.dependencies && item.dependencies.length > 0) {
       const proc = Bun.spawn(['bun', 'add', ...item.dependencies], { cwd })
       await proc.exited
     }

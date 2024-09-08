@@ -6,6 +6,9 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
+const storySvelteRegex = /\.story\.svelte$/
+const storyVueRegex = /\.story\.vue$/
+
 export default defineConfig({
   plugins: [svelte(), vue()],
   server: {
@@ -26,11 +29,11 @@ export default defineConfig({
         },
         {
           title: 'Svelte',
-          include: (file) => /\.story\.svelte$/.test(file.path),
+          include: (file) => storySvelteRegex.test(file.path),
         },
         {
           title: 'Vue',
-          include: (file) => /\.story\.vue$/.test(file.path),
+          include: (file) => storyVueRegex.test(file.path),
         },
       ],
     },

@@ -13,20 +13,21 @@ const explorer = lilconfig('components', {
   searchPlaces: ['components.json'],
 })
 
-export const RawConfigSchema = v.strictObject(
-  {
-    $schema: v.optional(v.string()),
-    typescript: v.pipe(v.fallback(v.boolean(), true), v.transform(input => Boolean(input))),
-    globalCss: v.string(),
-    mastercss: v.object({
-      config: v.string(),
-    }),
-    aliases: v.object({
-      components: v.string(),
-      utils: v.string(),
-    }),
-  }
-)
+export const RawConfigSchema = v.strictObject({
+  $schema: v.optional(v.string()),
+  typescript: v.pipe(
+    v.fallback(v.boolean(), true),
+    v.transform(input => Boolean(input))
+  ),
+  globalCss: v.string(),
+  mastercss: v.object({
+    config: v.string(),
+  }),
+  aliases: v.object({
+    components: v.string(),
+    utils: v.string(),
+  }),
+})
 
 export type RawConfig = v.InferInput<typeof RawConfigSchema>
 

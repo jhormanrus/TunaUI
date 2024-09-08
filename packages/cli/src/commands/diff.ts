@@ -75,7 +75,7 @@ export const diff = new Command()
 
       const changes = await diffComponent(component, config)
 
-      if (!changes.length) {
+      if (changes.length === 0) {
         p.outro(
           `No updates found for ${styleText('yellow', options.component)}.`,
         )
@@ -114,7 +114,7 @@ async function diffAll(
   const componentsWithUpdates = []
   for (const component of projectComponents) {
     const changes = await diffComponent(component, config)
-    if (changes.length) {
+    if (changes.length > 0) {
       componentsWithUpdates.push({
         name: component.name,
         changes,
@@ -122,13 +122,13 @@ async function diffAll(
     }
   }
 
-  if (!componentsWithUpdates.length) {
+  if (componentsWithUpdates.length === 0) {
     p.outro('No updates found.')
     process.exit(0)
   }
 
   const filePaths = componentsWithUpdates
-    .map(component => {
+    .map((component) => {
       const componentName = styleText('yellow', component.name)
       const filesPath = component.changes
         .map((change) => change.filePath)
